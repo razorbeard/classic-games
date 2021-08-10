@@ -1,0 +1,17 @@
+# Binaries and vendor folders
+**/bin/
+**/vendor/
+
+# Visual Studio related files
+.vs/
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user
+
+# Make tool related files
+**.make
+Makefile
+
+# Others
+scripts/__pycache__
