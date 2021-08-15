@@ -23,7 +23,7 @@ public:
 	};
 
 public:
-	PowerUp(Type type, const TextureHolder& textures);
+	PowerUp(Type type, const TextureHolder& textures, Grid* grid = nullptr);
 
 	virtual bool isMarkedForRemoval() const override;
 	void apply(Arkanoid& world) const;

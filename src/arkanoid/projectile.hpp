@@ -15,7 +15,7 @@ public:
 		TypeCount
 	};
 public:
-	Projectile(Type type, const TextureHolder& textures);
+	Projectile(Type type, const TextureHolder& textures, Grid* grid = nullptr);
 
 	virtual unsigned int getCategory() const override;
 	virtual sf::FloatRect getBoundingRect() const override;

@@ -11,8 +11,8 @@ namespace
 	const std::vector<PowerUpData> Table = initializePowerUpData();
 }
 
-PowerUp::PowerUp(Type type, const TextureHolder& textures)
-	: Entity(1)
+PowerUp::PowerUp(Type type, const TextureHolder& textures, Grid* grid)
+	: Entity(1, grid)
 	, mType(type)
 	, mRemovalFlag(false)
 	, mSpriteAnimation(textures.get(Table[type].texture), Table[type].textureRect)

@@ -12,8 +12,8 @@ namespace
 	const std::vector<BlockData> Table = initializeBlockData();
 }
 
-Block::Block(Color color, const TextureHolder& textures)
-	: Entity(Table[color].hitpoints)
+Block::Block(Color color, const TextureHolder& textures, Grid* grid)
+	: Entity(Table[color].hitpoints, grid)
 	, mColor(color)
 	, mSpriteAnimation(textures.get(Table[color].texture), Table[color].textureRect)
 	, mOldHitpoints(Table[color].hitpoints)
@@ -22,6 +22,7 @@ Block::Block(Color color, const TextureHolder& textures)
 	, mCanDropPowerUp(true)
 	, mSpawnedPowerUp(false)
 	, mDropPowerUpCommand()
+	, mGrid(grid)
 {
 	mSpriteAnimation.setFrameSize(Table[color].frameSize);
 	mSpriteAnimation.setNumFrames(Table[color].numFrames);
@@ -134,7 +135,7 @@ void Block::createPowerUp(SceneNode& node, const TextureHolder& textures) const
 	else if (60 <= randomNum && randomNum <= 79) type = PowerUp::Laser;
 	else if (80 <= randomNum && randomNum <= 99) type = PowerUp::Enlarge;
 
-	std::unique_ptr<PowerUp> powerUp{ new PowerUp(type, textures) };
+	std::unique_ptr<PowerUp> powerUp{ new PowerUp(type, textures, mGrid) };
 	powerUp->setPosition(getWorldPosition());
 	powerUp->setVelocity(0.0f, 200.0f);
 	node.attachChild(std::move(powerUp));

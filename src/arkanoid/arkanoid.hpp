@@ -4,6 +4,7 @@
 #include "commands/command_queue.hpp"
 #include "block.hpp"
 #include "vaus.hpp"
+#include "scene_graph/grid.hpp"
 
 #include <SFML/Graphics/RenderTexture.hpp>
 
@@ -60,7 +61,7 @@ private:
 	void spawnEnemy(sf::Time dt);
 	void spawnNewBall();
 
-	bool matchesCategories(SceneNode::Pair& colliders, Category::Type type1, Category::Type type2);
+	bool matchesCategories(Grid::EntityPair& colliders, Category::Type type1, Category::Type type2);
 	void handleCollisions();
 
 	void updateTexts();
@@ -89,6 +90,7 @@ private:
 
 	SceneNode mSceneGraph;
 	std::array<SceneNode*, LayerCount> mSceneLayers;
+	Grid mGrid;
 	CommandQueue mCommandQueue;
 
 	// Nodes trackers

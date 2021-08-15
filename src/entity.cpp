@@ -1,11 +1,17 @@
 #include "entity.hpp"
+#include "scene_graph/grid.hpp"
 
 #include <cassert>
 
-Entity::Entity(int hitpoints)
+Entity::Entity(int hitpoints, Grid* grid)
 	: mVelocity()
 	, mHitpoints(hitpoints)
+	, mGrid(grid)
 {
+	// Add the scene node to the subdivision only if the user want it
+	// Thus, the user can avoid unwanted entities in the grid
+	if (mGrid)
+		mGrid->add(this);
 }
 
 void Entity::setVelocity(sf::Vector2f velocity)

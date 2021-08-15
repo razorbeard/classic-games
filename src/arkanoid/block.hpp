@@ -26,7 +26,7 @@ public:
 	};
 
 public:
-	Block(Color color, const TextureHolder& textures);
+	Block(Color color, const TextureHolder& textures, Grid* grid = nullptr);
 
 	virtual bool isMarkedForRemoval() const override;
 	virtual void remove() override;
@@ -55,6 +55,7 @@ private:
 	int mOldHitpoints;
 
 	Command mDropPowerUpCommand;
+	Grid* mGrid;
 
 	Animation mSpriteAnimation;
 };

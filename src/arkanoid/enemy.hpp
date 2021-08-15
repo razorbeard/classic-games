@@ -16,7 +16,7 @@ public:
 	};
 
 public:
-	Enemy(Type type, const TextureHolder& textures);
+	Enemy(Type type, const TextureHolder& textures, Grid* grid = nullptr);
 
 	virtual unsigned int getCategory() const override;
 	virtual sf::FloatRect getBoundingRect() const override;

@@ -10,8 +10,8 @@ namespace
 	const std::vector<EnemyData> Table = initializeEnemyData();
 }
 
-Enemy::Enemy(Type type, const TextureHolder& textures)
-	: Entity(1)
+Enemy::Enemy(Type type, const TextureHolder& textures, Grid* grid)
+	: Entity(1, grid)
 	, mType(type)
 	, mSpriteAnimation(textures.get(Table[type].texture), Table[type].textureRect)
 	, mExplosion(textures.get(Textures::Particle), sf::IntRect(0, 0, 202, 32))

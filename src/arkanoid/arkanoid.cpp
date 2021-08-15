@@ -27,6 +27,7 @@ Arkanoid::Arkanoid(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlaye
 	, mSounds(sounds)
 	, mSceneGraph()
 	, mSceneLayers()
+	, mGrid(mWorldView.getSize().x, mWorldView.getSize().y, 50.0f)
 	, mBackgroundSprite(nullptr)
 	, mPlayerScore(nullptr)
 	, mPlayerLives(nullptr)
@@ -68,6 +69,7 @@ void Arkanoid::update(sf::Time dt)
 
 	handleCollisions();
 
+	mGrid.updateCells(); // Grid check on all entities
 	mSceneGraph.removeWrecks();
 
 	// Regular update step, edit vaus and ball(s) positions
@@ -288,7 +290,7 @@ void Arkanoid::generateStage(bool isRandom = false)
 void Arkanoid::addBlock(Block::Color color, float relX, float relY)
 {
 	// Add a block in accordance with the field bounds
-	std::unique_ptr<Block> block{ new Block(color, mTextures) };
+	std::unique_ptr<Block> block{ new Block(color, mTextures, &mGrid) };
 	block->setPosition(relX, relY);
 
 	// Silver blocks : hitpoints increase by one every eight stages
@@ -302,7 +304,7 @@ void Arkanoid::addBlock(Block::Color color, float relX, float relY)
 	mSceneLayers[Main]->attachChild(std::move(block));
 }
 
-bool Arkanoid::matchesCategories(SceneNode::Pair& colliders, Category::Type type1, Category::Type type2)
+bool Arkanoid::matchesCategories(Grid::EntityPair& colliders, Category::Type type1, Category::Type type2)
 {
 	unsigned int category1{ colliders.first->getCategory() };
 	unsigned int category2{ colliders.second->getCategory() };
@@ -330,11 +332,13 @@ void Arkanoid::handleCollisions()
 	// This is a heavy function (quadratic complexity), the fps drops drastically
 	// when the number of blocks in the scene graph increase
 	// Modify the number of generated blocks to see the difference
-	std::set<SceneNode::Pair> collisionPairs;
-	mSceneGraph.checkSceneCollision(mSceneGraph, collisionPairs);
+	//std::set<SceneNode::Pair> collisionPairs;
+	//mSceneGraph.checkSceneCollision(mSceneGraph, collisionPairs);
+	std::set<Grid::EntityPair> collisionPairs;
+	mGrid.checkCollisions(collisionPairs);
 
 	// Interactions between pairs of nodes
-	for (SceneNode::Pair pair : collisionPairs)
+	for (Grid::EntityPair pair : collisionPairs)
 	{
 		if (matchesCategories(pair, Category::PlayerVaus, Category::Projectile))
 		{
@@ -485,7 +489,7 @@ void Arkanoid::spawnEnemy(sf::Time dt)
 				trapdoor->activate();
 
 				// Take a random ennemy
-				std::unique_ptr<Enemy> enemy{ new Enemy{static_cast<Enemy::Type>(randomInt(Enemy::TypeCount)), mTextures} };
+				std::unique_ptr<Enemy> enemy{ new Enemy{static_cast<Enemy::Type>(randomInt(Enemy::TypeCount)), mTextures, &mGrid} };
 
 				// Shift the spawn position a bit to the left, due to the shadow from the trapdoor's sprite
 				int const orientation{ randomInt(2) == 0 ? 1 : -1 };
@@ -503,7 +507,7 @@ void Arkanoid::spawnEnemy(sf::Time dt)
 
 void Arkanoid::spawnNewBall()
 {
-	std::unique_ptr<Projectile> ball{ new Projectile{Projectile::Ball, mTextures} };
+	std::unique_ptr<Projectile> ball{ new Projectile{Projectile::Ball, mTextures, &mGrid} };
 
 	// Snap the ball's bottom to vaus' position
 	sf::Vector2f const offset{ 0.0f, -(ball->getBoundingRect().height + mPlayerVaus->getBoundingRect().height) / 2.0f };
@@ -521,7 +525,7 @@ void Arkanoid::multiBalls(int number)
 	// "Disruption" power up: add any amount of balls to the scene graph
 	for (int i{ 0 }; i < number; ++i)
 	{
-		std::unique_ptr<Projectile> ball{ new Projectile{Projectile::Ball, mTextures} };
+		std::unique_ptr<Projectile> ball{ new Projectile{Projectile::Ball, mTextures, &mGrid} };
 		ball->setPosition(mBalls.back()->getPosition());
 
 		// Spawn the new ball, by rotating the first ball's velocity vector between -45 and 45 degrees
@@ -573,12 +577,13 @@ void Arkanoid::setNextStage(sf::Time dt)
 		mSceneGraph.onCommand(mCommandQueue.pop(), dt);
 
 	// Remove any nodes marked for removal (especially blocks)
+	mGrid.updateCells();
 	mSceneGraph.removeWrecks();
 
 	// Add player's vaus if it doesn't already exist
 	if (!mPlayerVaus)
 	{
-		std::unique_ptr<Vaus> player{ new Vaus{Vaus::Normal, mTextures} };
+		std::unique_ptr<Vaus> player{ new Vaus{Vaus::Normal, mTextures, &mGrid} };
 		mPlayerVaus = player.get();
 		mSceneLayers[Main]->attachChild(std::move(player));
 	}

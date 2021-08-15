@@ -12,8 +12,8 @@ namespace
 	const std::vector<VausData> Table = initializeVausData();
 }
 
-Vaus::Vaus(Mode mode, const TextureHolder& textures)
-	: Entity(1)
+Vaus::Vaus(Mode mode, const TextureHolder& textures, Grid* grid)
+	: Entity(1, grid)
 	, mMode(mode)
 	, mSpriteAnimation(textures.get(Table[mode].texture), Table[mode].textureRect)
 	, mFireCommand()
@@ -21,6 +21,7 @@ Vaus::Vaus(Mode mode, const TextureHolder& textures)
 	, mIsFiring(false)
 	, mIsBallAttached(true)
 	, mHasLaunchedBall(false)
+	, mGrid(grid)
 {
 	mSpriteAnimation.setFrameSize(Table[mode].frameSize);
 	mSpriteAnimation.setNumFrames(Table[mode].numFrames);
@@ -106,7 +107,7 @@ void Vaus::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 
 void Vaus::createProjectile(SceneNode& node, float xOffset, float yOffset, const TextureHolder& textures) const
 {
-	std::unique_ptr<Projectile> projectile{ new Projectile(Projectile::Bullet, textures) };
+	std::unique_ptr<Projectile> projectile{ new Projectile(Projectile::Bullet, textures, mGrid) };
 	sf::Vector2f const offset{ xOffset * mSpriteAnimation.getGlobalBounds().width, yOffset * mSpriteAnimation.getGlobalBounds().height };
 	sf::Vector2f const velocity{ 0.0f, projectile->getMaxSpeed() };
 

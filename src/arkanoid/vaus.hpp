@@ -20,7 +20,7 @@ public:
 	};
 
 public:
-	Vaus(Mode mode, const TextureHolder& textures);
+	Vaus(Mode mode, const TextureHolder& textures, Grid* grid = nullptr);
 
 	virtual unsigned int getCategory() const override;
 	virtual sf::FloatRect getBoundingRect() const override;
@@ -46,6 +46,7 @@ private:
 	Animation mSpriteAnimation;
 	Command mFireCommand;
 	sf::Time mFireCountdown;
+	Grid* mGrid;
 
 	bool mIsBallAttached;
 	bool mHasLaunchedBall;
