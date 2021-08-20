@@ -27,7 +27,7 @@ Arkanoid::Arkanoid(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlaye
 	, mSounds(sounds)
 	, mSceneGraph()
 	, mSceneLayers()
-	, mGrid(mWorldView.getSize().x, mWorldView.getSize().y, 50.0f)
+	, mGrid(mWorldView.getSize().x, mWorldView.getSize().y + 100.0f, 100.0f)
 	, mBackgroundSprite(nullptr)
 	, mPlayerScore(nullptr)
 	, mPlayerLives(nullptr)
@@ -69,7 +69,6 @@ void Arkanoid::update(sf::Time dt)
 
 	handleCollisions();
 
-	mGrid.updateCells(); // Grid check on all entities
 	mSceneGraph.removeWrecks();
 
 	// Regular update step, edit vaus and ball(s) positions
@@ -292,6 +291,7 @@ void Arkanoid::addBlock(Block::Color color, float relX, float relY)
 	// Add a block in accordance with the field bounds
 	std::unique_ptr<Block> block{ new Block(color, mTextures, &mGrid) };
 	block->setPosition(relX, relY);
+	mGrid.insert(block.get());
 
 	// Silver blocks : hitpoints increase by one every eight stages
 	if (color == Block::Silver && mStage >= 8)
@@ -332,8 +332,6 @@ void Arkanoid::handleCollisions()
 	// This is a heavy function (quadratic complexity), the fps drops drastically
 	// when the number of blocks in the scene graph increase
 	// Modify the number of generated blocks to see the difference
-	//std::set<SceneNode::Pair> collisionPairs;
-	//mSceneGraph.checkSceneCollision(mSceneGraph, collisionPairs);
 	std::set<Grid::EntityPair> collisionPairs;
 	mGrid.checkCollisions(collisionPairs);
 
@@ -495,6 +493,7 @@ void Arkanoid::spawnEnemy(sf::Time dt)
 				int const orientation{ randomInt(2) == 0 ? 1 : -1 };
 				enemy->setPosition(trapdoor->getPosition().x + 45.0f, trapdoor->getPosition().y + 50.0f);
 				enemy->setVelocity(orientation * enemy->getMaxSpeed(), enemy->getMaxSpeed());
+				mGrid.insert(enemy.get());
 
 				mEnemies.push_back(enemy.get());
 				mSceneLayers[Main]->attachChild(std::move(enemy));
@@ -512,6 +511,7 @@ void Arkanoid::spawnNewBall()
 	// Snap the ball's bottom to vaus' position
 	sf::Vector2f const offset{ 0.0f, -(ball->getBoundingRect().height + mPlayerVaus->getBoundingRect().height) / 2.0f };
 	ball->setPosition(mPlayerVaus->getPosition() + offset);
+	mGrid.insert(ball.get());
 
 	mBalls.push_back(ball.get());
 	mSceneLayers[Main]->attachChild(std::move(ball));
@@ -527,6 +527,7 @@ void Arkanoid::multiBalls(int number)
 	{
 		std::unique_ptr<Projectile> ball{ new Projectile{Projectile::Ball, mTextures, &mGrid} };
 		ball->setPosition(mBalls.back()->getPosition());
+		mGrid.insert(ball.get());
 
 		// Spawn the new ball, by rotating the first ball's velocity vector between -45 and 45 degrees
 		float const angle{ toRadian(randomFloat(-45, 45)) };
@@ -577,7 +578,6 @@ void Arkanoid::setNextStage(sf::Time dt)
 		mSceneGraph.onCommand(mCommandQueue.pop(), dt);
 
 	// Remove any nodes marked for removal (especially blocks)
-	mGrid.updateCells();
 	mSceneGraph.removeWrecks();
 
 	// Add player's vaus if it doesn't already exist
@@ -591,6 +591,7 @@ void Arkanoid::setNextStage(sf::Time dt)
 	// Reset Vaus status and positioning
 	mPlayerVaus->setMode(Vaus::Normal);
 	mPlayerVaus->setPosition(mSpawnPosition);
+	mGrid.insert(mPlayerVaus);
 
 	// Clear the balls container, add a new ball
 	mBalls.clear();

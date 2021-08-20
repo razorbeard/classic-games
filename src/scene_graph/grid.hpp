@@ -7,6 +7,17 @@
 
 class Entity;
 
+class Cell
+{
+public:
+	void registerEntity(Entity* entity);
+
+	std::list<Entity*> getEntities();
+
+private:
+	std::list<Entity*> mEntities;
+};
+
 class Grid
 {
 public:
@@ -15,17 +26,15 @@ public:
 public:
 	Grid(int width, int height, float cellSize);
 
-	void add(Entity* entity);
-	void updateCells();
+	void insert(Entity* entity);
 	void checkCollisions(std::set<EntityPair>& collisionPairs);
 
 private:
 	int gaugeCellSize(int length, float cellSize);
-	void handleCell(Entity* entity, std::set<EntityPair>& collisionPairs);
+	void handleCell(Cell cell, std::set<EntityPair>& collisionPairs);
 
 private:
-	std::vector<std::vector<Entity*>> mCells;
-	std::list<Entity*> mEntities;
+	std::vector<std::vector<Cell>> mCells;
 	float mCellSize;
 };
 

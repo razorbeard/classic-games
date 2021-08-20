@@ -7,11 +7,25 @@ Entity::Entity(int hitpoints, Grid* grid)
 	: mVelocity()
 	, mHitpoints(hitpoints)
 	, mGrid(grid)
+	, mCells()
 {
-	// Add the scene node to the subdivision only if the user want it
-	// Thus, the user can avoid unwanted entities in the grid
-	if (mGrid)
-		mGrid->add(this);
+}
+
+void Entity::registerCell(std::list<Entity*>* node)
+{
+	mCells.push_back(node);
+}
+
+void Entity::removeFromGrid()
+{
+	// Find in each cell the entity's pointer and remove it
+	for (auto& node : mCells)
+	{
+		node->remove(this);
+	}
+
+	// Clear the 2D list of pointers contained by the entity
+	mCells.clear();
 }
 
 void Entity::setVelocity(sf::Vector2f velocity)
@@ -58,11 +72,15 @@ void Entity::damage(int points)
 	assert(points > 0);
 
 	mHitpoints -= points;
+
+	if (mHitpoints == 0)
+		removeFromGrid();
 }
 
 void Entity::destroy()
 {
 	mHitpoints = 0;
+	removeFromGrid();
 }
 
 void Entity::remove()
@@ -78,6 +96,10 @@ bool Entity::isDestroyed() const
 
 void Entity::updateCurrent(sf::Time dt, CommandQueue&)
 {
+	removeFromGrid();
+
 	// Distance = time * speed
 	move(mVelocity * dt.asSeconds());
+
+	mGrid->insert(this);
 }

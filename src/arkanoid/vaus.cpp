@@ -3,6 +3,7 @@
 #include "utility.hpp"
 #include "commands/command_queue.hpp"
 #include "scene_graph/sound_node.hpp"
+#include "scene_graph/grid.hpp"
 #include "projectile.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -113,6 +114,8 @@ void Vaus::createProjectile(SceneNode& node, float xOffset, float yOffset, const
 
 	projectile->setPosition(getWorldPosition() + offset);
 	projectile->setVelocity(-velocity);
+	mGrid->insert(projectile.get());
+
 	node.attachChild(std::move(projectile));
 }
 

@@ -3,6 +3,8 @@
 
 #include "scene_graph/scene_node.hpp"
 
+#include <list>
+
 class Grid;
 
 // Represent a game element in the world
@@ -24,6 +26,9 @@ public:
 	virtual void remove();
 	virtual bool isDestroyed() const override;
 
+	void registerCell(std::list<Entity*>* node);
+	void removeFromGrid();
+
 protected:
 	virtual void updateCurrent(sf::Time dt, CommandQueue& commands) override;
 
@@ -32,6 +37,7 @@ private:
 	int mHitpoints;
 
 	Grid* mGrid;
+	std::vector<std::list<Entity*>*> mCells;
 };
 
 #endif // ENTITY_HPP

@@ -3,26 +3,31 @@
 
 Grid::Grid(int width, int height, float cellSize)
 	: mCellSize(cellSize)
-	, mEntities()
 	, mCells(gaugeCellSize(width, cellSize),
-			 std::vector<Entity*>(gaugeCellSize(height, cellSize), nullptr))
+			 std::vector<Cell>(gaugeCellSize(height, cellSize)))
 {
 }
 
 int Grid::gaugeCellSize(int length, float cellSize)
 {
-	// For testing, we only use one cell
-	// When collisions works, replace with : return (int)(length / cellSize);
-	return 1;
+	// Add an extra cell to take the whole width/height into account
+	return (int)(length / cellSize) + 1;
 }
 
-void Grid::add(Entity* entity)
+void Grid::insert(Entity* entity)
 {
-	int x{ (int)(entity->getPosition().x / mCellSize) };
-	int y{ (int)(entity->getPosition().y / mCellSize) };
+	int const xStart{ (int)(entity->getBoundingRect().left / mCellSize) };
+	int const xEnd{ (int)((entity->getBoundingRect().left + entity->getBoundingRect().width) / mCellSize) };
+	int const yStart{ (int)(entity->getBoundingRect().top / mCellSize) };
+	int const yEnd{ (int)((entity->getBoundingRect().top + entity->getBoundingRect().height) / mCellSize) };
 
-	mEntities.push_back(entity);
-	mCells[x][y] = entity;
+	for (auto x{ xStart }; x <= xEnd; x++)
+	{
+		for (auto y{ yStart }; y <= yEnd; y++)
+		{
+			mCells[x][y].registerEntity(entity);
+		}
+	}
 }
 
 void Grid::checkCollisions(std::set<EntityPair>& collisionPairs)
@@ -36,22 +41,22 @@ void Grid::checkCollisions(std::set<EntityPair>& collisionPairs)
 	}
 }
 
-void Grid::updateCells()
+void Grid::handleCell(Cell cell, std::set<EntityPair>& collisionPairs)
 {
-	// Look each cell and remove entities from the linked-list that have been destroyed
-	auto cellBegin = std::remove_if(mEntities.begin(), mEntities.end(), [](Entity* entity) { return entity->isDestroyed(); });
-	mEntities.erase(cellBegin, mEntities.end());
-}
+	auto entities = cell.getEntities();
 
-void Grid::handleCell(Entity* entity, std::set<EntityPair>& collisionPairs)
-{
-	auto it1 = mEntities.begin();
+	// No entity found in the cell: skip the test
+	if (entities.empty())
+		return;
 
-	while (it1 != mEntities.end())
+	auto it1 = entities.begin();
+
+	// Detect collision by comparing all existing entities two-by-two
+	while (it1 != entities.end())
 	{
 		auto it2 = std::next(it1, 1);
 
-		while (it2 != mEntities.end())
+		while (it2 != entities.end())
 		{
 			Entity* other{ *it2 };
 			if ((*it1)->getBoundingRect().intersects(other->getBoundingRect()))
@@ -63,4 +68,18 @@ void Grid::handleCell(Entity* entity, std::set<EntityPair>& collisionPairs)
 		}
 		++it1;
 	}
+}
+
+void Cell::registerEntity(Entity* entity)
+{
+	// The cell keep a track of the entity
+	mEntities.push_back(entity);
+
+	// The entity keep a track of the current entities in the cell
+	entity->registerCell(&mEntities);
+}
+
+std::list<Entity*> Cell::getEntities()
+{
+	return mEntities;
 }
