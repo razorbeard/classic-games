@@ -30,6 +30,7 @@ public:
 
 	virtual unsigned int getCategory() const override;
 	virtual sf::FloatRect getBoundingRect() const override;
+	virtual std::vector<sf::Vector2f> getHitboxPoints() const override;
 
 protected:
 	virtual void updateCurrent(sf::Time dt, CommandQueue& commands) override;
@@ -39,6 +40,7 @@ private:
 	Type mType;
 	bool mRemovalFlag;
 	Animation mSpriteAnimation;
+	sf::ConvexShape mHitbox;
 };
 
 #endif // POWER_UP_HPP

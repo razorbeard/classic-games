@@ -3,6 +3,8 @@
 
 #include <SFML/System/Vector2.hpp>
 
+#include <vector>
+
 namespace sf
 {
 	class Shape;
@@ -10,6 +12,7 @@ namespace sf
 	class Text;
 	class CircleShape;
 	class RectangleShape;
+	class ConvexShape;
 }
 
 class Animation;
@@ -36,6 +39,7 @@ sf::Vector2f unitVector(sf::Vector2f vector);
 // Collision detection
 bool isColliding(const sf::CircleShape& a, const sf::CircleShape& b);
 bool isColliding(const sf::RectangleShape& a, const sf::CircleShape& b);
+bool isColliding(std::vector<sf::Vector2f>& a, std::vector<sf::Vector2f>& b);
 
 void adaptVelocityOnHit(Entity& bouncingEntity, const Entity& entity);
 

@@ -33,6 +33,7 @@ public:
 
 	virtual unsigned int getCategory() const override;
 	virtual sf::FloatRect getBoundingRect() const override;
+	virtual std::vector<sf::Vector2f> getHitboxPoints() const override;
 
 	void canDropPowerUp(bool flag) noexcept;
 
@@ -58,6 +59,7 @@ private:
 	Grid* mGrid;
 
 	Animation mSpriteAnimation;
+	sf::ConvexShape mHitbox;
 };
 
 #endif // BLOCK_HPP

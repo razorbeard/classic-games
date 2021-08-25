@@ -28,6 +28,35 @@ Projectile::Projectile(Type type, const TextureHolder& textures, Grid* grid)
 	// Correct impact position for bullets
 	if (mType == Projectile::Bullet)
 		mDestruction.move(0.0f, -10.0f);
+
+	// Redefining the hitbox for the ball
+	sf::FloatRect const rect{ getBoundingRect() };
+
+	if (mType == Projectile::Ball)
+	{
+		float const radius{ rect.width / 2.0f };
+		float const pi{ 3.14159f };
+
+		mHitbox.setPointCount(8);
+
+		for (std::size_t idx{ 0 }; idx < mHitbox.getPointCount(); ++idx)
+		{
+			float const angle{ (idx * 2 * pi) / mHitbox.getPointCount() + pi / 2 };
+			float const x = std::cos(angle) * radius;
+			float const y = std::sin(angle) * radius;
+
+			mHitbox.setPoint(idx, sf::Vector2f(x + radius, y + radius) + sf::Vector2f(rect.left, rect.top));
+		}
+	}
+	else
+	{
+		mHitbox.setPointCount(4);
+
+		mHitbox.setPoint(0, sf::Vector2f(rect.left, rect.top));
+		mHitbox.setPoint(1, sf::Vector2f(rect.left, rect.top + rect.height));
+		mHitbox.setPoint(2, sf::Vector2f(rect.left + rect.width, rect.top + rect.height));
+		mHitbox.setPoint(3, sf::Vector2f(rect.left + rect.width, rect.top));
+	}
 }
 
 void Projectile::updateCurrent(sf::Time dt, CommandQueue& commands)
@@ -88,4 +117,16 @@ float Projectile::getMaxSpeed() const
 int Projectile::getDamage() const
 {
 	return Table[mType].damage;
+}
+
+std::vector<sf::Vector2f> Projectile::getHitboxPoints() const
+{
+	std::vector<sf::Vector2f> transformedPoints(mHitbox.getPointCount());
+
+	for (std::size_t i = 0; i < mHitbox.getPointCount(); ++i)
+	{
+		transformedPoints[i] = getTransform().transformPoint(mHitbox.getPoint(i));
+	}
+
+	return transformedPoints;
 }

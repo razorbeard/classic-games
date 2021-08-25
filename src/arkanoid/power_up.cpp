@@ -22,6 +22,14 @@ PowerUp::PowerUp(Type type, const TextureHolder& textures, Grid* grid)
 	mSpriteAnimation.setDuration(Table[type].duration);
 	mSpriteAnimation.setSpacing(Table[type].spacing);
 	mSpriteAnimation.setRepeating(true);
+
+	mHitbox.setPointCount(4);
+	sf::FloatRect const rect{ getBoundingRect() };
+
+	mHitbox.setPoint(0, sf::Vector2f(rect.left, rect.top));
+	mHitbox.setPoint(1, sf::Vector2f(rect.left, rect.top + rect.height));
+	mHitbox.setPoint(2, sf::Vector2f(rect.left + rect.width, rect.top + rect.height));
+	mHitbox.setPoint(3, sf::Vector2f(rect.left + rect.width, rect.top));
 }
 
 void PowerUp::updateCurrent(sf::Time dt, CommandQueue& commands)
@@ -72,4 +80,16 @@ unsigned int PowerUp::getCategory() const
 sf::FloatRect PowerUp::getBoundingRect() const
 {
 	return getWorldTransform().transformRect(mSpriteAnimation.getGlobalBounds());
+}
+
+std::vector<sf::Vector2f> PowerUp::getHitboxPoints() const
+{
+	std::vector<sf::Vector2f> transformedPoints(mHitbox.getPointCount());
+
+	for (std::size_t i = 0; i < mHitbox.getPointCount(); ++i)
+	{
+		transformedPoints[i] = getTransform().transformPoint(mHitbox.getPoint(i));
+	}
+
+	return transformedPoints;
 }

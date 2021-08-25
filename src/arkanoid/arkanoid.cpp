@@ -509,7 +509,7 @@ void Arkanoid::spawnNewBall()
 	std::unique_ptr<Projectile> ball{ new Projectile{Projectile::Ball, mTextures, &mGrid} };
 
 	// Snap the ball's bottom to vaus' position
-	sf::Vector2f const offset{ 0.0f, -(ball->getBoundingRect().height + mPlayerVaus->getBoundingRect().height) / 2.0f };
+	sf::Vector2f const offset{ 0.0f, -(ball->getBoundingRect().height + mPlayerVaus->getBoundingRect().height + 5.0f) / 2.0f };
 	ball->setPosition(mPlayerVaus->getPosition() + offset);
 	mGrid.insert(ball.get());
 

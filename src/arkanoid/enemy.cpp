@@ -30,6 +30,14 @@ Enemy::Enemy(Type type, const TextureHolder& textures, Grid* grid)
 
 	centerOrigin(mSpriteAnimation);
 	centerOrigin(mExplosion);
+
+	mHitbox.setPointCount(4);
+	sf::FloatRect const rect{ getBoundingRect() };
+
+	mHitbox.setPoint(0, sf::Vector2f(rect.left, rect.top));
+	mHitbox.setPoint(1, sf::Vector2f(rect.left, rect.top + rect.height));
+	mHitbox.setPoint(2, sf::Vector2f(rect.left + rect.width, rect.top + rect.height));
+	mHitbox.setPoint(3, sf::Vector2f(rect.left + rect.width, rect.top));
 }
 
 void Enemy::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
@@ -76,4 +84,16 @@ unsigned int Enemy::getCategory() const
 float Enemy::getMaxSpeed() const
 {
 	return Table[mType].speed;
+}
+
+std::vector<sf::Vector2f> Enemy::getHitboxPoints() const
+{
+	std::vector<sf::Vector2f> transformedPoints(mHitbox.getPointCount());
+
+	for (std::size_t i = 0; i < mHitbox.getPointCount(); ++i)
+	{
+		transformedPoints[i] = getTransform().transformPoint(mHitbox.getPoint(i));
+	}
+
+	return transformedPoints;
 }

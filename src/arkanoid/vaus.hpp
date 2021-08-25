@@ -24,6 +24,7 @@ public:
 
 	virtual unsigned int getCategory() const override;
 	virtual sf::FloatRect getBoundingRect() const override;
+	virtual std::vector<sf::Vector2f> getHitboxPoints() const override;
 	float getMaxSpeed() const;
 
 	void fire();
@@ -47,6 +48,7 @@ private:
 	Command mFireCommand;
 	sf::Time mFireCountdown;
 	Grid* mGrid;
+	sf::ConvexShape mHitbox;
 
 	bool mIsBallAttached;
 	bool mHasLaunchedBall;

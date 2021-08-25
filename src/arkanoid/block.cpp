@@ -34,6 +34,14 @@ Block::Block(Color color, const TextureHolder& textures, Grid* grid)
 	{
 		createPowerUp(node, textures);
 	};
+
+	mHitbox.setPointCount(4);
+	sf::FloatRect const rect{ getBoundingRect() };
+
+	mHitbox.setPoint(0, sf::Vector2f(rect.left, rect.top));
+	mHitbox.setPoint(1, sf::Vector2f(rect.left, rect.top + rect.height));
+	mHitbox.setPoint(2, sf::Vector2f(rect.left + rect.width, rect.top + rect.height));
+	mHitbox.setPoint(3, sf::Vector2f(rect.left + rect.width, rect.top));
 }
 
 void Block::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
@@ -119,6 +127,18 @@ Block::Color Block::getColor() const
 sf::FloatRect Block::getBoundingRect() const
 {
 	return getWorldTransform().transformRect(mSpriteAnimation.getGlobalBounds());
+}
+
+std::vector<sf::Vector2f> Block::getHitboxPoints() const
+{
+	std::vector<sf::Vector2f> transformedPoints(mHitbox.getPointCount());
+
+	for (std::size_t i = 0; i < mHitbox.getPointCount(); ++i)
+	{
+		transformedPoints[i] = getTransform().transformPoint(mHitbox.getPoint(i));
+	}
+
+	return transformedPoints;
 }
 
 void Block::createPowerUp(SceneNode& node, const TextureHolder& textures) const

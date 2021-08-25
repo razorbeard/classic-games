@@ -103,3 +103,9 @@ void Entity::updateCurrent(sf::Time dt, CommandQueue&)
 
 	mGrid->insert(this);
 }
+
+std::vector<sf::Vector2f> Entity::getHitboxPoints() const
+{
+	// Returns a vector of transformed points for a convex shape
+	return std::vector<sf::Vector2f>{};
+}

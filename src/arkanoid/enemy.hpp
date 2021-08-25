@@ -20,6 +20,7 @@ public:
 
 	virtual unsigned int getCategory() const override;
 	virtual sf::FloatRect getBoundingRect() const override;
+	virtual std::vector<sf::Vector2f> getHitboxPoints() const override;
 	float getMaxSpeed() const;
 
 private:
@@ -31,6 +32,7 @@ private:
 private:
 	Animation mSpriteAnimation;
 	Animation mExplosion;
+	sf::ConvexShape mHitbox;
 
 	Type mType;
 	bool mShowExplosion;

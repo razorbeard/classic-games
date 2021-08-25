@@ -1,5 +1,6 @@
 #include "grid.hpp"
 #include "entity.hpp"
+#include "utility.hpp"
 
 Grid::Grid(int width, int height, float cellSize)
 	: mCellSize(cellSize)
@@ -59,7 +60,7 @@ void Grid::handleCell(Cell cell, std::set<EntityPair>& collisionPairs)
 		while (it2 != entities.end())
 		{
 			Entity* other{ *it2 };
-			if ((*it1)->getBoundingRect().intersects(other->getBoundingRect()))
+			if (isColliding((*it1)->getHitboxPoints(), other->getHitboxPoints()))
 			{
 				// std::minmax helps to avoid duplicates
 				collisionPairs.insert((std::minmax((*it1), other)));

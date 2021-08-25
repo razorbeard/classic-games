@@ -19,6 +19,7 @@ public:
 
 	virtual unsigned int getCategory() const override;
 	virtual sf::FloatRect getBoundingRect() const override;
+	virtual std::vector<sf::Vector2f> getHitboxPoints() const override;
 	virtual bool isMarkedForRemoval() const override;
 	virtual void remove() override;
 
@@ -36,6 +37,7 @@ private:
 	Animation mDestruction;
 
 	bool mShowDestruction;
+	sf::ConvexShape mHitbox;
 };
 
 #endif // PROJECTILE_HPP

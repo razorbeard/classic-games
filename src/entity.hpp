@@ -3,7 +3,10 @@
 
 #include "scene_graph/scene_node.hpp"
 
+#include <SFML/Graphics/ConvexShape.hpp>
+
 #include <list>
+#include <vector>
 
 class Grid;
 
@@ -26,6 +29,7 @@ public:
 	virtual void remove();
 	virtual bool isDestroyed() const override;
 
+	virtual std::vector<sf::Vector2f> getHitboxPoints() const;
 	void registerCell(std::list<Entity*>* node);
 	void removeFromGrid();
 
