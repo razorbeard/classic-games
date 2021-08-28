@@ -34,6 +34,8 @@ Block::Block(Color color, const TextureHolder& textures, Grid* grid)
 	{
 		createPowerUp(node, textures);
 	};
+
+	centerOrigin(mSpriteAnimation);
 }
 
 void Block::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const

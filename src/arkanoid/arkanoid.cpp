@@ -126,13 +126,13 @@ void Arkanoid::adaptBallsPosition()
 	for (Projectile* ball : mBalls)
 	{
 		if (ball->getPosition().x - ballRadius < fieldBounds.left)
-			ball->setVelocity(-ball->getVelocity().x, ball->getVelocity().y);
+			ball->setVelocity(std::abs(ball->getVelocity().x), ball->getVelocity().y);
 
 		else if (ball->getPosition().x + ballRadius > fieldBounds.width + fieldBounds.left)
-			ball->setVelocity(-ball->getVelocity().x, ball->getVelocity().y);
+			ball->setVelocity(-std::abs(ball->getVelocity().x), ball->getVelocity().y);
 
 		else if (ball->getPosition().y - ballRadius < fieldBounds.top)
-			ball->setVelocity(ball->getVelocity().x, -ball->getVelocity().y);
+			ball->setVelocity(ball->getVelocity().x, std::abs(ball->getVelocity().y));
 	}
 }
 
@@ -196,8 +196,6 @@ void Arkanoid::setBackgroundSprite()
 
 void Arkanoid::setFieldSprite()
 {
-	// Pipe background for decoration :
-	// this node doesn't get involved in the collision testing with other entities
 	std::unique_ptr<SpriteNode> pipeBackground{ new SpriteNode{mTextures.get(Textures::PipeBackground)} };
 	pipeBackground->setPosition(0.0f, 84.0f);
 	mSceneLayers[Main]->attachChild(std::move(pipeBackground));
@@ -261,7 +259,7 @@ void Arkanoid::generateStage(bool isRandom = false)
 	assert(StageTable[mStage - 1].size() == nxBlocks * nyBlocks);
 
 	// Starting point coordinates, taken arbitrarly
-	sf::Vector2f startPoint{ 106.0f, 194.0f };
+	sf::Vector2f startPoint{ 135.0f, 210.0f };
 
 	// Generate blocks by travelling along a subrectangle of the field bounds
 	int counter{ 0 };
@@ -329,11 +327,11 @@ bool Arkanoid::matchesCategories(Grid::EntityPair& colliders, Category::Type typ
 void Arkanoid::handleCollisions()
 {
 	// Check every combinaison possible between pairs of nodes
-	// This is a heavy function (quadratic complexity), the fps drops drastically
-	// when the number of blocks in the scene graph increase
-	// Modify the number of generated blocks to see the difference
 	std::set<Grid::EntityPair> collisionPairs;
 	mGrid.checkCollisions(collisionPairs);
+
+	// Avoid the ball to collide with multiple blocks at the same time
+	bool hasResolvedBallBlock{ false };
 
 	// Interactions between pairs of nodes
 	for (Grid::EntityPair pair : collisionPairs)
@@ -354,12 +352,23 @@ void Arkanoid::handleCollisions()
 					projectile.setPosition(vaus.getPosition() + offset);
 					vaus.attachBall();
 				}
-				// Check where the ball hits the Vaus, modify the ball's velocity
-				// TO DO : look for corners
-				if (projectile.getPosition().x < vaus.getPosition().x)
-					projectile.setVelocity(projectile.getVelocity().x, -projectile.getVelocity().y);
-				else
-					projectile.setVelocity(-projectile.getVelocity().x, -projectile.getVelocity().y);
+
+				float const distance{ projectile.getPosition().x - vaus.getPosition().x };
+				float ratio{ (distance * 2.0f) / vaus.getBoundingRect().width };
+				sf::Vector2f const oldVelocity{ projectile.getVelocity() };
+
+				// Exclude interval [-0.3, 0.3] to avoid significant horizontal movement
+				if (ratio <= 0.3f && ratio >= -0.3f)
+					ratio = (ratio > 0 ? 1 : -1) * 0.3f;
+
+				// Keep constant speed after modifying the horizontal component
+				float constexpr boost{ 1.4f };
+				projectile.setVelocity(projectile.getMaxSpeed() * ratio * boost, projectile.getVelocity().y);
+				projectile.setVelocity(unitVector(projectile.getVelocity()) * length(oldVelocity));
+
+				// To avoid an unknown behavior when the ball is stuck in the Vaus,
+				// we always flip the y velocity with a positive value
+				projectile.setVelocity(projectile.getVelocity().x, -std::abs(projectile.getVelocity().y));
 
 				vaus.playLocalSound(mCommandQueue, SoundEffect::VausBallHit);
 			}
@@ -395,7 +404,7 @@ void Arkanoid::handleCollisions()
 			mPlayerVaus->playLocalSound(mCommandQueue, SoundEffect::Explosion);
 		}
 
-		else if (matchesCategories(pair, Category::Block, Category::Projectile))
+		else if (matchesCategories(pair, Category::Block, Category::Projectile) && !hasResolvedBallBlock)
 		{
 			auto& block = static_cast<Block&>(*pair.first);
 			auto& projectile = static_cast<Projectile&>(*pair.second);
@@ -415,11 +424,8 @@ void Arkanoid::handleCollisions()
 
 			else if (projectile.getType() == Projectile::Ball)
 			{
-				// Adapt the ball velocity when a hit occurs
-				// Review: when two blocks are hit at the same time, weird effect that
-				// annulate the velocity changement => the ball keeps his previous velocity
-				// Solution: create circle/rect collision
 				adaptVelocityOnHit(projectile, block);
+				hasResolvedBallBlock = true;
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 #include "utility.hpp"
 #include "entity.hpp"
 #include "graphics/animation.hpp"
+#include "arkanoid/block.hpp"
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -12,6 +13,7 @@
 #include <cmath>
 #include <ctime>
 #include <cassert>
+#include <algorithm>
 
 namespace
 {
@@ -85,6 +87,11 @@ sf::Vector2f unitVector(sf::Vector2f vector)
 	return vector / length(vector);
 }
 
+float dotProduct(sf::Vector2f a, sf::Vector2f b)
+{
+	return a.x * b.x + a.y * b.y;
+}
+
 bool isColliding(const sf::CircleShape& a, const sf::CircleShape& b)
 {
 	return length(sf::Vector2f(a.getPosition().x - b.getPosition().x, a.getPosition().y - b.getPosition().y)) <= a.getRadius() + b.getRadius();
@@ -105,38 +112,60 @@ bool isColliding(const sf::RectangleShape& a, const sf::CircleShape& b)
 
 void adaptVelocityOnHit(Entity& bouncingEntity, const Entity& entity)
 {
-	float const ballRadius{ bouncingEntity.getBoundingRect().width / 2.0f };
+	// "Pseudo" Circle-AABB collision resolution
+	// We assume the origin of both entities is centered
 
-	float const ballTop{ bouncingEntity.getPosition().y - ballRadius };
-	float const ballBottom{ bouncingEntity.getPosition().y + ballRadius };
-	float const ballRight{ bouncingEntity.getPosition().x + ballRadius };
-	float const ballLeft{ bouncingEntity.getPosition().x - ballRadius };
+	sf::Vector2f const distance{ bouncingEntity.getPosition() - entity.getPosition() };
+	sf::Vector2f const halfLength(entity.getBoundingRect().width / 2.0f, entity.getBoundingRect().height / 2.0f);
 
-	// Careful : the origin of the blocks is not center
-	float const blockTop{ entity.getPosition().y };
-	float const blockBottom{ entity.getPosition().y + entity.getBoundingRect().height };
-	float const blockRight{ entity.getPosition().x + entity.getBoundingRect().width };
-	float const blockLeft{ entity.getPosition().x };
+	// Find closest point on the entity's rectangle
+	float const clampedX{ std::clamp(distance.x, -halfLength.x, halfLength.x) };
+	float const clampedY{ std::clamp(distance.y, -halfLength.y, halfLength.y) };
+	sf::Vector2f const closestPoint{ entity.getPosition() + sf::Vector2f(clampedX, clampedY) };
 
-	float const leftDistance{ ballRight - blockLeft };
-	float const rightDistance{ blockRight - ballLeft };
-	float const topDistance{ ballBottom - blockTop };
-	float const bottomDistance{ blockBottom - ballTop };
+	// Find how much the bouncingEntity has penetrated in the entity
+	sf::Vector2f const penetration{ closestPoint - bouncingEntity.getPosition() };
 
-	bool const hasHitLeftSide{ abs(leftDistance) < abs(rightDistance) };
-	bool const hasHitTopSide{ abs(topDistance) < abs(bottomDistance) };
+	// Find the best normal vector that is "similar" to the penetration vector
+	std::vector<sf::Vector2f> normals{ {1.0f, 0.0f},   // Right
+									   {0.0f, -1.0f},  // Top
+									   {-1.0f, 0.0f},  // Left
+									   {0.0f, 1.0f} }; // Bottom
 
-	float const minOverlapX{ hasHitLeftSide ? leftDistance : rightDistance };
-	float const minOverlapY{ hasHitTopSide ? topDistance : bottomDistance };
+	// Find the best direction where the hit occurs
+	int direction{ -1 };
+	float max{ 0.0f };
+	for (int i{ 0 }; i < normals.size(); ++i)
+	{
+		float const vectProd = dotProduct(penetration, normals[i]);
+		if (vectProd > max)
+		{
+			max = vectProd;
+			direction = i;
+		}
+	}
 
-	if (abs(minOverlapX) < abs(minOverlapY))
-		if (hasHitLeftSide)
-			bouncingEntity.setVelocity(-bouncingEntity.getVelocity().x, bouncingEntity.getVelocity().y);
+	if (direction == 0 || direction == 2)
+	{
+		// Left or right hit: flip horizontal velocity
+		bouncingEntity.setVelocity(-bouncingEntity.getVelocity().x, bouncingEntity.getVelocity().y);
+
+		// Relocate the boucingEntity with an extra distance
+		float offset{ (bouncingEntity.getBoundingRect().width / 2.0f) - std::abs(penetration.x) };
+		if (direction == 2)
+			bouncingEntity.move(offset, 0);
 		else
-			bouncingEntity.setVelocity(-bouncingEntity.getVelocity().x, bouncingEntity.getVelocity().y);
+			bouncingEntity.move(-offset, 0);
+	}
 	else
-		if (hasHitTopSide)
-			bouncingEntity.setVelocity(bouncingEntity.getVelocity().x, -bouncingEntity.getVelocity().y);
+	{
+		// Top or bottom hit: flip vertical velocity
+		bouncingEntity.setVelocity(bouncingEntity.getVelocity().x, -bouncingEntity.getVelocity().y);
+
+		float offset{ (bouncingEntity.getBoundingRect().width / 2.0f) - std::abs(penetration.y) };
+		if (direction == 1)
+			bouncingEntity.move(0, offset);
 		else
-			bouncingEntity.setVelocity(bouncingEntity.getVelocity().x, -bouncingEntity.getVelocity().y);
+			bouncingEntity.move(0, -offset);
+	}
 }
