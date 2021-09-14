@@ -21,6 +21,11 @@ project "classic-games"
     }
         
     postbuildcommands { "{COPYDIR} resources %{cfg.targetdir}/resources" }
+	
+	-- On windows, openal32.dll is needed even if we use static linking,
+	-- due to the licence used (LGPL v2)
+	configuration "windows"
+	    postbuildcommands { "{COPYFILE} vendor/SFML-2.5.1/bin/openal32.dll %{cfg.targetdir}" }
     
     filter "system:windows"
         cppdialect "C++17"

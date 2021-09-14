@@ -99,7 +99,7 @@ if (not Path(sfmlDirectory).exists()):
         
         # We only need headers, librairies and the license
         for fileName in listOfFileNames:
-            if fileName.endswith((".lib", ".pdb")) or any(str in fileName for str in ["license", "include/"]):
+            if fileName.endswith((".lib", ".pdb")) or any(str in fileName for str in ["license", "include/", "openal32.dll"]):
                 zipObj.extract(fileName, "./vendor")
     
     print("Done.\n")
