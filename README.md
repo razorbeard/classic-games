@@ -27,21 +27,12 @@ You need at least `Python 3.6` to install the prerequisites for this project. Al
 
 ### Linux
 
-1. Depending on your Linux distribution, install the correct packages for developing applications that use SFML :
+1. In the scripts folder, launch the script file `setup_project.sh` and follow the instructions.
 
-``` 
-sudo apt-get install libsfml-dev     (Debian, Ubuntu)
-sudo dnf install SFML-devel          (Fedora, CentOS, Solus)
-sudo pacman -Syu sfml                (Arch Linux)
-```
-
-2. Then, download the last release of Premake [here](https://github.com/premake/premake-core/releases/download/v5.0.0-alpha16/premake-5.0.0-alpha16-linux.tar.gz). 
-Place the executable to the root folder, and generate the Makefile by typing the following command in the terminal : `./premake5 gmake2`
+2. Once done, launch the script file `generate_project.sh` to generate a Makefile for this project.
 
 3. You can start building the application by typing the following command in the terminal : `make config=release`.\
 Debug configuration is the default value, but it isn't relevant for Linux. So you must add the release config flag to the make tool.
-
-These steps will be scripted in the near future, like Windows, to make it more simple for the user (and avoid premake5 to be commited).
 
 ## Credits
 
