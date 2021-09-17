@@ -246,17 +246,13 @@ void Arkanoid::setStatisticsText()
 
 void Arkanoid::generateStage(bool isRandom = false)
 {
-	sf::FloatRect const bounds{ getFieldBounds() };
-
 	// Blocks should have the same size
 	int blockWidth{ 58 };
 	int blockHeight{ 32 };
 
 	// Define the block layout
-	// NB: modify nxBlocks and nyBlocks to see a fps impact due to the collision testing method
 	int nxBlocks{ 14 };
-	int nyBlocks{ 5 };
-	assert(StageTable[mStage - 1].size() == nxBlocks * nyBlocks);
+	int nyBlocks{ 7 };
 
 	// Starting point coordinates, taken arbitrarly
 	sf::Vector2f startPoint{ 135.0f, 210.0f };
@@ -569,6 +565,9 @@ void Arkanoid::resetBlockCounter()
 void Arkanoid::setNextStage(sf::Time dt)
 {
 	++mStage;
+
+	if (hasPlayerReachedEnd())
+		return;
 
 	// Remove all the remaining blocks, projectiles, enemies or power ups in the scene
 	Command command{};

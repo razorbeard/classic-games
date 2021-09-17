@@ -40,7 +40,7 @@ GameOverState::GameOverState(StateStack& stack, Context context)
 
 	mGameOverText.setCharacterSize(70);
 	centerOrigin(mGameOverText);
-	mGameOverText.setPosition(0.5f * windowSize.x, 0.6f * windowSize.y);
+	mGameOverText.setPosition(0.5f * windowSize.x, 0.65f * windowSize.y);
 }
 
 void GameOverState::draw()
