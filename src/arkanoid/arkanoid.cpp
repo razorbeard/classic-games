@@ -429,30 +429,50 @@ void Arkanoid::handleCollisions()
 
 void Arkanoid::destroyEntitiesOutsideView()
 {
-	// Destroy projectiles (bullets + balls), power ups and enemies if they're out of the field bounds
-	Command command{};
-	command.category = Category::Projectile | Category::PowerUp | Category::Enemy;
-	command.action = derivedAction<Entity>([this](Entity& e, sf::Time)
-										   {
-											   if (!getFieldBounds().intersects(e.getBoundingRect()))
-												   e.remove();
+	Command firstCommand{};
+	firstCommand.category = Category::Projectile;
+	firstCommand.action = derivedAction<Projectile>([this](Projectile& p, sf::Time)
+		{
+			sf::FloatRect bounds = getFieldBounds();
+			if (p.getType() == Projectile::Type::Ball)
+			{
+				bounds.top -= 22.0f;
+				bounds.left -= 22.0f;
+				bounds.width += 2 * 22.0f;
+				bounds.height += 22.0f;
+				if (!bounds.intersects(p.getBoundingRect()))
+					p.remove();
 
-											   // Clean the ball container before any updates
-											   if (e.getCategory() == Category::Projectile)
-											   {
-												   mBalls.erase(std::remove_if(mBalls.begin(), mBalls.end(),
-																[](Projectile* ball) { return ball->isDestroyed(); }), mBalls.end());
-											   }
+				// Clean the ball container before any updates
+				mBalls.erase(std::remove_if(mBalls.begin(), mBalls.end(),
+					[](Projectile* ball) { return ball->isDestroyed(); }), mBalls.end());
+			}
+			else if (p.getType() == Projectile::Type::Bullet)
+			{
+				bounds.top += 22.0f;
+				if (!bounds.intersects(p.getBoundingRect()))
+					p.remove();
+			}
+		});
 
-											   // Clean the enemies container also
-											   if (e.getCategory() == Category::Enemy)
-											   {
-												   mEnemies.erase(std::remove_if(mEnemies.begin(), mEnemies.end(),
-																  [](Enemy* enemy) { return enemy->isDestroyed(); }), mEnemies.end());
-											   }
-										   });
+	mCommandQueue.push(firstCommand);
 
-	mCommandQueue.push(command);
+	Command secondCommand{};
+	secondCommand.category = Category::PowerUp | Category::Enemy;
+	secondCommand.action = derivedAction<Entity>([this](Entity& e, sf::Time)
+		{
+			if (!getFieldBounds().intersects(e.getBoundingRect()))
+				e.remove();
+
+			// Clean the enemies container also
+			if (e.getCategory() == Category::Enemy)
+			{
+				mEnemies.erase(std::remove_if(mEnemies.begin(), mEnemies.end(),
+					[](Enemy* enemy) { return enemy->isDestroyed(); }), mEnemies.end());
+			}
+		});
+
+	mCommandQueue.push(secondCommand);
 }
 
 void Arkanoid::updateTexts()
