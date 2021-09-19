@@ -153,9 +153,6 @@ void Arkanoid::adaptEnnemiesPosition()
 
 		else if (enemy->getPosition().x + enemyRadius > fieldBounds.width + fieldBounds.left)
 			enemy->setVelocity(-enemy->getVelocity().x, enemy->getVelocity().y);
-
-		else if (enemy->getPosition().y - enemyRadius < fieldBounds.top)
-			enemy->setVelocity(enemy->getVelocity().x, -enemy->getVelocity().y);
 	}
 }
 
@@ -461,14 +458,19 @@ void Arkanoid::destroyEntitiesOutsideView()
 	secondCommand.category = Category::PowerUp | Category::Enemy;
 	secondCommand.action = derivedAction<Entity>([this](Entity& e, sf::Time)
 		{
-			if (!getFieldBounds().intersects(e.getBoundingRect()))
-				e.remove();
+			sf::FloatRect bounds = getFieldBounds();
+			if (e.getCategory() == Category::Enemy) {
+				bounds.top -= 22.0f;
+				bounds.height += 22.0f;
+				if (!bounds.intersects(e.getBoundingRect()))
+					e.remove();
 
-			// Clean the enemies container also
-			if (e.getCategory() == Category::Enemy)
-			{
 				mEnemies.erase(std::remove_if(mEnemies.begin(), mEnemies.end(),
 					[](Enemy* enemy) { return enemy->isDestroyed(); }), mEnemies.end());
+			}
+			else {
+				if (!bounds.intersects(e.getBoundingRect()))
+					e.remove();
 			}
 		});
 
@@ -498,13 +500,16 @@ void Arkanoid::spawnEnemy(sf::Time dt)
 	static sf::Time timer{ sf::Time::Zero };
 	timer += dt;
 
-	// Each ~10s elapsed, pick a random integer to check if an enemy can spawn from a trapdoor
-	// Maximum 5 enemies allowed on the screen; spawn rate can be definied also base on the stage number
-	if (mEnemies.size() <= 5 && timer > sf::seconds(10.0f))
+	// spawn rate based on the stage number
+	sf::Time spawnTime{ sf::seconds(10.0f) - (float)mStage * sf::seconds(0.5f) };
+
+	// Each spawnTime elapsed, pick a random integer to check if an enemy can spawn from a trapdoor
+	// Maximum 5 enemies allowed on the screen
+	if (mEnemies.size() <= 5 && timer > spawnTime)
 	{
 		for (auto& trapdoor : { mLeftTrapdoor, mRightTrapdoor })
 		{
-			if (randomInt(1) == 0)
+			if (randomInt(2) == 0)
 			{
 				trapdoor->activate();
 
@@ -512,8 +517,8 @@ void Arkanoid::spawnEnemy(sf::Time dt)
 				std::unique_ptr<Enemy> enemy{ new Enemy{static_cast<Enemy::Type>(randomInt(Enemy::TypeCount)), mTextures, &mGrid} };
 
 				// Shift the spawn position a bit to the left, due to the shadow from the trapdoor's sprite
-				int const orientation{ randomInt(2) == 0 ? 1 : -1 };
-				enemy->setPosition(trapdoor->getPosition().x + 45.0f, trapdoor->getPosition().y + 50.0f);
+				float const orientation{ randomFloat(-1, 1) };
+				enemy->setPosition(trapdoor->getPosition().x + 45.0f, trapdoor->getPosition().y);
 				enemy->setVelocity(orientation * enemy->getMaxSpeed(), enemy->getMaxSpeed());
 				mGrid.insert(enemy.get());
 
