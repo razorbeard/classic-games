@@ -56,7 +56,7 @@ struct BlockData
 	Textures::ID texture;
 	sf::IntRect textureRect;
 	sf::Vector2i frameSize{ 58, 32 };
-	size_t numFrames{ 0 };
+	size_t numFrames{ 1 };
 	sf::Time duration{ sf::Time::Zero };
 	int spacing{ 2 };
 	int value;

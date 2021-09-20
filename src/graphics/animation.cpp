@@ -41,6 +41,9 @@ Animation::Animation(const sf::Texture& texture, const sf::IntRect& rectangle)
 	, mElapsedTime(sf::Time::Zero)
 	, mRepeat(false)
 {
+	// Set the first frame to avoid drawing the whole texture at first render
+	sf::IntRect textureRect{ sf::IntRect(mInitialTextRect.left, mInitialTextRect.top, mFrameSize.x, mFrameSize.y) };
+	mSprite.setTextureRect(textureRect);
 }
 
 // Take a whole texture to set up the sprite animation
