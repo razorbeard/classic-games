@@ -336,7 +336,7 @@ void Arkanoid::handleCollisions()
 
 			if (projectile.getType() == Projectile::Ball)
 			{
-				if (vaus.getMode() == Vaus::Catch)
+				if (vaus.getMode() == Vaus::Catch && mBalls.size() == 1)
 				{
 					projectile.setVelocity(0.0f, 0.0f);
 
@@ -556,13 +556,12 @@ void Arkanoid::multiBalls(int number)
 		ball->setPosition(mBalls.back()->getPosition());
 		mGrid.insert(ball.get());
 
-		// Spawn the new ball, by rotating the first ball's velocity vector between -45 and 45 degrees
-		float const angle{ toRadian(randomFloat(-45, 45)) };
-
-		float const xVel{ mBalls.front()->getVelocity().x };
-		float const yVel{ mBalls.front()->getVelocity().y };
-		ball->setVelocity(xVel * std::cos(angle) - std::sin(angle) * yVel,
-						  xVel * std::sin(angle) + std::cos(angle) * yVel);
+		// Spawn the new ball, by rotating the first ball's velocity according a symetry axis
+		sf::Transform axialRotation((i%2 == 0 ? 1 : -1), 0, 0, 
+			                         0, (i % 2 == 0 ? -1 : 1), 0,
+		                             0, 0, 1);
+		
+		ball->setVelocity(axialRotation.transformPoint(mBalls.front()->getVelocity()));
 		mBalls.push_back(ball.get());
 		mSceneLayers[Main]->attachChild(std::move(ball));
 	}
