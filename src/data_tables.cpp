@@ -168,9 +168,9 @@ std::vector<PowerUpData> initializePowerUpData()
 	data[PowerUp::Catch].textureRect = sf::IntRect(0, 204, 382, 32);
 	data[PowerUp::Catch].action = [](Arkanoid& a) { a.setVausMode(Vaus::Catch); };
 
-	data[PowerUp::Slow].texture = Textures::Arkanoid;
-	data[PowerUp::Slow].textureRect = sf::IntRect(0, 238, 382, 32);
-	data[PowerUp::Slow].action = [](Arkanoid& a) { a.slowBall(); };
+	data[PowerUp::Reverse].texture = Textures::Arkanoid;
+	data[PowerUp::Reverse].textureRect = sf::IntRect(0, 238, 382, 32);
+	data[PowerUp::Reverse].action = [](Arkanoid& a) { a.reverseView(); };
 
 	data[PowerUp::Break].texture = Textures::Arkanoid;
 	data[PowerUp::Break].textureRect = sf::IntRect(0, 272, 382, 32);

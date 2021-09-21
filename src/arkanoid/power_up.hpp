@@ -15,7 +15,7 @@ public:
 		Laser,
 		Enlarge,
 		Catch,
-		Slow,
+		Reverse,
 		Break,
 		Disruption,
 		Player,

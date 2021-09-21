@@ -38,7 +38,7 @@ public:
 	// Power ups calls
 	void resetBlockCounter();
 	void earnExtraLife();
-	void slowBall();
+	void reverseView();
 	void setVausMode(Vaus::Mode mode);
 	void multiBalls(int number);
 

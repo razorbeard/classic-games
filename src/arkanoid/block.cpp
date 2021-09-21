@@ -133,7 +133,7 @@ void Block::createPowerUp(SceneNode& node, const TextureHolder& textures) const
 	else if (5 <= randomNum && randomNum <= 12) type = PowerUp::Player;
 	else if (13 <= randomNum && randomNum <= 25) type = PowerUp::Disruption;
 	else if (26 <= randomNum && randomNum <= 42) type = PowerUp::Catch;
-	else if (43 <= randomNum && randomNum <= 59) type = PowerUp::Slow;
+	else if (43 <= randomNum && randomNum <= 59) type = PowerUp::Reverse;
 	else if (60 <= randomNum && randomNum <= 79) type = PowerUp::Laser;
 	else if (80 <= randomNum && randomNum <= 99) type = PowerUp::Enlarge;
 

@@ -284,9 +284,9 @@ void Arkanoid::addBlock(Block::Color color, float relX, float relY)
 	block->setPosition(relX, relY);
 	mGrid.insert(block.get());
 
-	// Silver blocks : hitpoints increase by one every eight stages
-	if (color == Block::Silver && mStage >= 8)
-		block->repair(mStage / 8);
+	// Silver blocks : hitpoints increase by one every four stages
+	if (color == Block::Silver && mStage >= 4)
+		block->repair(mStage / 4);
 
 	// Gold blocks : do not count them for the remaining blocks
 	if (!(color == Block::Gold))
@@ -573,12 +573,9 @@ void Arkanoid::earnExtraLife()
 	++mLives;
 }
 
-void Arkanoid::slowBall()
+void Arkanoid::reverseView()
 {
-	// Only one ball is affected by the power up "Disruption",
-	// since it disable others powers up
-	sf::Vector2f velocity{ mBalls.back()->getVelocity() };
-	mBalls.back()->setVelocity(velocity / 2.0f);
+	mWorldView.rotate(180.0f);
 }
 
 void Arkanoid::resetBlockCounter()
@@ -590,6 +587,8 @@ void Arkanoid::resetBlockCounter()
 void Arkanoid::setNextStage(sf::Time dt)
 {
 	++mStage;
+
+	mWorldView.setRotation(0.0f);
 
 	if (hasPlayerReachedEnd())
 		return;
@@ -637,6 +636,8 @@ void Arkanoid::setNextStage(sf::Time dt)
 void Arkanoid::setLostBallScene(sf::Time dt)
 {
 	--mLives;
+
+	mWorldView.setRotation(0.0f);
 
 	// Remove all projectiles, enemies and power ups in the scene
 	Command command{};

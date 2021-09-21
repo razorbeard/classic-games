@@ -90,13 +90,21 @@ void Vaus::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 	}
 	else if (mHasLaunchedBall)
 	{
+		int const orientation = getVelocity().x / getMaxSpeed();
+		sf::Transform rotation;
+
+		if (orientation == 0)
+			rotation.rotate(randomFloat(-60.0f, -30.0f));
+		else if (orientation < 0)
+			rotation.rotate(-90.0f);
+
 		// Launch the ball from the Vaus
 		Command command{};
 		command.category = Category::Projectile;
-		command.action = derivedAction<Projectile>([](Projectile& node, sf::Time)
+		command.action = derivedAction<Projectile>([=](Projectile& node, sf::Time)
 												   {
 													   if (node.getType() == Projectile::Ball)
-														   node.accelerate(node.getMaxSpeed(), -node.getMaxSpeed());
+														   node.accelerate(rotation.transformPoint(node.getMaxSpeed(), -node.getMaxSpeed()));
 												   });
 
 		commands.push(command);
