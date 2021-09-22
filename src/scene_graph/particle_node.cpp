@@ -89,7 +89,8 @@ void ParticleNode::addVertex(float worldX, float worldY, float texCoordX, float 
 void ParticleNode::computeVertices() const
 {
 	// Need to dertermine the vertex positions
-	sf::Vector2f const size{ mTexture.getSize() };
+	sf::IntRect const rect{ Table[mType].textureRect };
+	sf::Vector2f const size( rect.width, rect.height );
 	sf::Vector2f const half{ size / 2.0f };
 
 	// Refill vertex array
@@ -104,9 +105,9 @@ void ParticleNode::computeVertices() const
 		color.a = static_cast<sf::Uint8>(255 * std::max(ratio, 0.0f));
 
 		// Vertice in every corner of the rectangle
-		addVertex(pos.x - half.x, pos.y - half.y, 0.0f, 0.0f, color);
-		addVertex(pos.x + half.x, pos.y - half.y, size.x, 0.0f, color);
-		addVertex(pos.x + half.x, pos.y + half.y, size.x, size.y, color);
-		addVertex(pos.x - half.x, pos.y + half.y, 0.0f, size.y, color);
+		addVertex(pos.x - half.x, pos.y - half.y, rect.left, rect.top, color);
+		addVertex(pos.x + half.x, pos.y - half.y, rect.left + rect.width, rect.top, color);
+		addVertex(pos.x + half.x, pos.y + half.y, rect.left + rect.width, rect.top + rect.height, color);
+		addVertex(pos.x - half.x, pos.y + half.y, rect.left, rect.top + rect.height, color);
 	}
 }

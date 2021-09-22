@@ -272,8 +272,13 @@ std::vector<ParticleData> initializeParticleData()
 {
 	std::vector<ParticleData> data(Particle::ParticleCount);
 
+	data[Particle::Star].textureRect = sf::IntRect(0, 34, 28, 28);
 	data[Particle::Star].color = sf::Color(255, 255, 50);
-	data[Particle::Star].lifetime = sf::seconds(4.f);
+	data[Particle::Star].lifetime = sf::seconds(4.0f);
+
+	data[Particle::BallTrail].textureRect = sf::IntRect(0, 74, 20, 20);
+	data[Particle::BallTrail].color = sf::Color(255, 255, 255);
+	data[Particle::BallTrail].lifetime = sf::seconds(0.17f);
 
 	return data;
 }

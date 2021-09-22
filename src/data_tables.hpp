@@ -79,6 +79,7 @@ struct ProjectileData
 
 struct ParticleData
 {
+	sf::IntRect textureRect;
 	sf::Color color;
 	sf::Time lifetime;
 };

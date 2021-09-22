@@ -2,6 +2,7 @@
 #include "utility.hpp"
 #include "resources/resource_holder.hpp"
 #include "data_tables.hpp"
+#include "scene_graph/emitter_node.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
@@ -24,6 +25,13 @@ Projectile::Projectile(Type type, const TextureHolder& textures, Grid* grid)
 
 	centerOrigin(mSprite);
 	centerOrigin(mDestruction);
+
+	if (mType == Projectile::Ball)
+	{
+		std::unique_ptr<EmitterNode> ballTrail(new EmitterNode(Particle::BallTrail));
+		ballTrail->setPosition(0.0f, 0.0f);
+		attachChild(std::move(ballTrail));
+	}
 
 	// Correct impact position for bullets
 	if (mType == Projectile::Bullet)

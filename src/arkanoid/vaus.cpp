@@ -139,7 +139,7 @@ void Vaus::fire()
 		mIsFiring = true;
 
 	// Ready to detach and launch the ball
-	else if (mIsBallAttached)
+	if (mIsBallAttached)
 	{
 		mHasLaunchedBall = true;
 		mIsBallAttached = false;

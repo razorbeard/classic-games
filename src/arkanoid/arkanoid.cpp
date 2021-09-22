@@ -9,6 +9,7 @@
 #include "trapdoor.hpp"
 #include "audio/sound_player.hpp"
 #include "utility.hpp"
+#include "scene_graph/particle_node.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -172,6 +173,10 @@ void Arkanoid::buildScene()
 	setBackgroundSprite();
 	setFieldSprite();
 	setStatisticsText();
+
+	// Add particle node to the scene
+	std::unique_ptr<ParticleNode> ballTrailNode(new ParticleNode(Particle::BallTrail, mTextures));
+	mSceneLayers[Background]->attachChild(std::move(ballTrailNode));
 
 	// Add sound effect node
 	std::unique_ptr<SoundNode> soundNode{ new SoundNode{mSounds} };

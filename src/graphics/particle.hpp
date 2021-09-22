@@ -10,7 +10,7 @@ struct Particle
 	enum Type
 	{
 		Star,
-		BulletImpact,
+		BallTrail,
 		ParticleCount
 	};
 
