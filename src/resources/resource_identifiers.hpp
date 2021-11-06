@@ -26,6 +26,9 @@ namespace Textures
 
 		// Tileset
 		BackgroundTile,
+
+		// Tetris
+		Tetris,
 	};
 }
 

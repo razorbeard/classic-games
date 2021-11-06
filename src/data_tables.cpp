@@ -240,6 +240,18 @@ std::vector<BlockData> initializeBlockData()
 	return data;
 }
 
+std::vector<TetrominoData> initializeTetrominoData()
+{
+	std::vector<TetrominoData> data(7);
+
+	for (int i = 0; i < data.size(); ++i)
+	{
+		data[i].textureRect = sf::IntRect((i % 7) * 40, 0, 40, 40);
+	}
+
+	return data;
+}
+
 std::vector<ProjectileData> initializeProjectileData()
 {
 	std::vector<ProjectileData> data(Projectile::TypeCount);

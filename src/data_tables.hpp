@@ -77,6 +77,12 @@ struct ProjectileData
 	sf::Time duration;
 };
 
+struct TetrominoData
+{
+	Textures::ID texture = Textures::Tetris;
+	sf::IntRect textureRect;
+};
+
 struct ParticleData
 {
 	sf::IntRect textureRect;
@@ -90,6 +96,7 @@ std::vector<ParticleData>	    initializeParticleData();
 std::vector<BlockData>          initializeBlockData();
 std::vector<VausData>           initializeVausData();
 std::vector<EnemyData>          initializeEnemyData();
+std::vector<TetrominoData>      initializeTetrominoData();
 std::vector<ProjectileData>     initializeProjectileData();
 std::vector<PowerUpData>        initializePowerUpData();
 

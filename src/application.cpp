@@ -4,6 +4,7 @@
 #include "state_stack/pause_state.hpp"
 #include "state_stack/game_over_state.hpp"
 #include "state_stack/arkanoid_state.hpp"
+#include "state_stack/tetris_state.hpp"
 
 // To avoid strong variations of delta time, and thereby game logic
 // problems (collisions for example), we fix the frame rate to 60 FPS
@@ -130,4 +131,5 @@ void Application::registerStates()
 	mStateStack.registerState<PauseState>(States::Pause);
 	mStateStack.registerState<GameOverState>(States::GameOver);
 	mStateStack.registerState<ArkanoidState>(States::Arkanoid);
+	mStateStack.registerState<TetrisState>(States::Tetris);
 }

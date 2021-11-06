@@ -10,6 +10,7 @@ namespace States
 		Menu,
 		Game,
 		Arkanoid,
+		Tetris,
 		Pause,
 		Settings,
 		GameOver
