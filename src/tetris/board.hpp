@@ -11,15 +11,16 @@
 
 struct Field
 {
-	sf::Sprite mSprite;
+	sf::Sprite* mSprite = nullptr;
 	bool isOccupied = false;
 };
 
 class Board
 {
 public:
-	Board(int width, int height);
+	Board(int width, int height, sf::Vector2i offset);
 
+	void setSpriteContainer(std::unordered_map<int, sf::Sprite>* spriteContainer);
 	void addBlock(std::unique_ptr<Tetromino>& tetromino);
 	bool doesPieceFit(Tetromino tetromino, Tetromino::Rotation rotation, int xShift, int yShift);
 
@@ -29,7 +30,7 @@ public:
 
 private:
 	std::vector<std::vector<Field>> mCells;
-	std::vector<std::unique_ptr<Tetromino>> mTetrominos;
+	std::unordered_map<int, sf::Sprite>* mSpriteContainer;
 	int mWidth;
 	int mHeight;
 };

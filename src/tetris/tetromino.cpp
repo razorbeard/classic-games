@@ -9,9 +9,6 @@
 
 namespace
 {
-	const std::vector<TetrominoData> Table = initializeTetrominoData();
-	const int squareLength = Table[0].textureRect.width;
-
 	// 1 Tetromino = 4 squares pieces, each located with a 1D index in a NxN matrix
 	// We also add an extra info about the size of the bounding box of each shape,
 	// at the end of each array
@@ -25,9 +22,10 @@ namespace
 	};
 }
 
-Tetromino::Tetromino(int id, const TextureHolder& textures)
+Tetromino::Tetromino(int id, std::unordered_map<int, sf::Sprite>* spriteContainer)
 	: mId(id)
-	, mSprite(textures.get(Table[id].texture), Table[id].textureRect)
+	, mSpriteContainer(spriteContainer)
+	, mCoordinates(0, 0)
 {
 	// Convert back to 2D each square position, and store them in a vector
 	mSquaresInfo.first = BlockInfo[mId][4];
@@ -41,22 +39,21 @@ Tetromino::Tetromino(int id, const TextureHolder& textures)
 
 void Tetromino::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	// mSprite acts as a buffer to avoid stocking multiple sprites
+	// mSpriteContainer acts as a buffer to avoid stocking multiple sprites
 	for (int i{ 0 }; i < mSquaresInfo.second.size(); ++i)
 	{
-		mSprite.setPosition(squareLength * (mSquaresInfo.second[i].x + getPosition().x), squareLength * (mSquaresInfo.second[i].y + getPosition().y));
-		target.draw(mSprite);
+		auto squareLength = mSpriteContainer->at(mId).getTextureRect().width;
+		auto x = squareLength * (mSquaresInfo.second[i].x + mCoordinates.x); // + offset.x
+		auto y = squareLength * (mSquaresInfo.second[i].y + mCoordinates.y); // + offset.y
+		mSpriteContainer->at(mId).setPosition(x, y);
+		target.draw(mSpriteContainer->at(mId));
 	}
 }
 
-sf::Sprite Tetromino::getSprite() const
+void Tetromino::shift(int x, int y)
 {
-	return mSprite;
-}
-
-std::array<sf::Vector2i, 4> Tetromino::getSquaresInfo() const
-{
-	return mSquaresInfo.second;
+	mCoordinates.x += x;
+	mCoordinates.y += y;
 }
 
 void Tetromino::applyRotation(Rotation rotation)
@@ -79,4 +76,19 @@ void Tetromino::applyRotation(Rotation rotation)
 			mSquaresInfo.second[i].y = 1 - (buffer.x - (mSquaresInfo.first - 2));
 		}
 	}
+}
+
+std::array<sf::Vector2i, 4> Tetromino::getLocalCoordinates() const
+{
+	return mSquaresInfo.second;
+}
+
+sf::Vector2i Tetromino::getCoordinates() const
+{
+	return mCoordinates;
+}
+
+int Tetromino::getId() const
+{
+	return mId;
 }

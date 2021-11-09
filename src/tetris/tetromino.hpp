@@ -8,8 +8,9 @@
 
 #include <vector>
 #include <array>
+#include <unordered_map>
 
-class Tetromino : public sf::Transformable, public sf::Drawable
+class Tetromino : public sf::Drawable
 {
 public:
 	enum class Rotation
@@ -20,19 +21,23 @@ public:
 	};
 
 public:
-	Tetromino(int id, const TextureHolder& textures);
+	Tetromino(int id, std::unordered_map<int, sf::Sprite>* spriteContainer);
 
-	std::array<sf::Vector2i, 4> getSquaresInfo() const;
 	void applyRotation(Rotation rotation);
-	sf::Sprite getSprite() const;
+	void shift(int x, int y);
+
+	std::array<sf::Vector2i, 4> getLocalCoordinates() const;
+	sf::Vector2i getCoordinates() const;
+	int getId() const;
 
 public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 private:
 	int mId;
+	sf::Vector2i mCoordinates;
 	std::pair<int, std::array<sf::Vector2i, 4>> mSquaresInfo;
-	mutable sf::Sprite mSprite;
+	std::unordered_map<int, sf::Sprite>* mSpriteContainer;
 };
 
 #endif // TETROMINO_HPP

@@ -11,6 +11,7 @@
 
 #include <array>
 #include <queue>
+#include <unordered_map>
 
 class SoundPlayer;
 
@@ -52,6 +53,7 @@ private:
 
 	std::unique_ptr<Tetromino> mCurrentTetromino;
 	std::queue<std::unique_ptr<Tetromino>> mTetrominoBag;
+	std::unordered_map<int, sf::Sprite> mSpriteContainer;
 	Board mBoard;
 	CommandQueue mCommandQueue;
 };
