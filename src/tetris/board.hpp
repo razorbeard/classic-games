@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <memory>
+#include <set>
 
 struct Field
 {
@@ -18,21 +19,23 @@ struct Field
 class Board
 {
 public:
-	Board(int width, int height, sf::Vector2i offset);
+	Board(int width, int height);
 
 	void setSpriteContainer(std::unordered_map<int, sf::Sprite>* spriteContainer);
-	void addBlock(std::unique_ptr<Tetromino>& tetromino);
+	std::tuple<std::set<int>, int> addBlock(std::unique_ptr<Tetromino>& tetromino);
+	int removeLines(std::set<int>& lineIndexes);
 	bool doesPieceFit(Tetromino tetromino, Tetromino::Rotation rotation, int xShift, int yShift);
 
-	void removeLine();
-	void clean();
-	void printGrid(sf::RenderTarget& target);
+	void display(sf::RenderTarget& target);
+	void setOffset(sf::Vector2i offset);
+	int getSpawnLocation() const;
 
 private:
 	std::vector<std::vector<Field>> mCells;
 	std::unordered_map<int, sf::Sprite>* mSpriteContainer;
 	int mWidth;
 	int mHeight;
+	sf::Vector2i mOffset;
 };
 
 #endif // BOARD_HPP

@@ -18,6 +18,12 @@ void TetrisState::draw()
 
 bool TetrisState::update(sf::Time dt)
 {
+	if (mWorld.hasLost())
+	{
+		mPlayer.setMissionStatus(Player::MissionFailure);
+		requestStackPush(States::GameOver);
+	}
+
 	mWorld.update(dt);
 
 	CommandQueue& commands{ mWorld.getCommandQueue() };

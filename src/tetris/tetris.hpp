@@ -8,6 +8,7 @@
 #include "tetris/board.hpp"
 
 #include <SFML/Graphics/RenderTexture.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 #include <array>
 #include <queue>
@@ -32,13 +33,18 @@ public:
 	void draw();
 	void rotate();
 	void moveCurrentPiece(Direction dir);
+	bool hasLost() const;
 
 	CommandQueue& getCommandQueue();
 
 private:
 	void loadTextures();
+	void buildScene();
 
 	void getNextTetromino();
+	void initializeText(sf::Text& text, sf::Vector2f pos);
+	void updateScore(int nLinesCleared, int dropPoints);
+	void updateTexts();
 
 private:
 	sf::RenderTarget& mTarget;
@@ -54,6 +60,16 @@ private:
 	std::unique_ptr<Tetromino> mCurrentTetromino;
 	std::queue<std::unique_ptr<Tetromino>> mTetrominoBag;
 	std::unordered_map<int, sf::Sprite> mSpriteContainer;
+	sf::Sprite mBackground;
+	sf::Text mScoreText;
+	sf::Text mLevelText;
+	sf::Text mLinesClearedText;
+	int mScore;
+	int mLevel;
+	int mLinesCleared;
+	sf::Vector2i mOffset;
+	sf::Vector2i mBagOffset;
+	bool mHasLost;
 	Board mBoard;
 	CommandQueue mCommandQueue;
 };

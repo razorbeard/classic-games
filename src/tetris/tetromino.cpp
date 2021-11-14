@@ -26,6 +26,7 @@ Tetromino::Tetromino(int id, std::unordered_map<int, sf::Sprite>* spriteContaine
 	: mId(id)
 	, mSpriteContainer(spriteContainer)
 	, mCoordinates(0, 0)
+	, mOffset(0, 0)
 {
 	// Convert back to 2D each square position, and store them in a vector
 	mSquaresInfo.first = BlockInfo[mId][4];
@@ -43,8 +44,8 @@ void Tetromino::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	for (int i{ 0 }; i < mSquaresInfo.second.size(); ++i)
 	{
 		auto squareLength = mSpriteContainer->at(mId).getTextureRect().width;
-		auto x = squareLength * (mSquaresInfo.second[i].x + mCoordinates.x); // + offset.x
-		auto y = squareLength * (mSquaresInfo.second[i].y + mCoordinates.y); // + offset.y
+		auto x = squareLength * (mSquaresInfo.second[i].x + mCoordinates.x) + mOffset.x;
+		auto y = squareLength * (mSquaresInfo.second[i].y + mCoordinates.y) + mOffset.y;
 		mSpriteContainer->at(mId).setPosition(x, y);
 		target.draw(mSpriteContainer->at(mId));
 	}
@@ -86,6 +87,17 @@ std::array<sf::Vector2i, 4> Tetromino::getLocalCoordinates() const
 sf::Vector2i Tetromino::getCoordinates() const
 {
 	return mCoordinates;
+}
+
+void Tetromino::setCoordinates(int x, int y)
+{
+	mCoordinates.x = x;
+	mCoordinates.y = y;
+}
+
+void Tetromino::setOffset(sf::Vector2i offset)
+{
+	mOffset = offset;
 }
 
 int Tetromino::getId() const

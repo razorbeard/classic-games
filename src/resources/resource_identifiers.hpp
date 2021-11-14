@@ -29,6 +29,7 @@ namespace Textures
 
 		// Tetris
 		Tetris,
+		TetrisBackground,
 	};
 }
 

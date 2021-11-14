@@ -28,6 +28,8 @@ public:
 
 	std::array<sf::Vector2i, 4> getLocalCoordinates() const;
 	sf::Vector2i getCoordinates() const;
+	void setCoordinates(int x, int y);
+	void setOffset(sf::Vector2i offset);
 	int getId() const;
 
 public:
@@ -36,6 +38,7 @@ public:
 private:
 	int mId;
 	sf::Vector2i mCoordinates;
+	sf::Vector2i mOffset;
 	std::pair<int, std::array<sf::Vector2i, 4>> mSquaresInfo;
 	std::unordered_map<int, sf::Sprite>* mSpriteContainer;
 };
