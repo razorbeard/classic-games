@@ -179,10 +179,10 @@ void Tetris::updateScore(int nLinesCleared, int dropPoints)
 	}
 }
 
-void Tetris::rotate()
+void Tetris::rotate(Tetromino::Rotation rotation)
 {
-	if (mBoard.doesPieceFit(*mCurrentTetromino, Tetromino::Rotation::Clockwise, 0, 0))
-		mCurrentTetromino->applyRotation(Tetromino::Rotation::Clockwise);
+	if (mBoard.doesPieceFit(*mCurrentTetromino, rotation, 0, 0))
+		mCurrentTetromino->applyRotation(rotation);
 }
 
 void Tetris::moveCurrentPiece(Direction direction)
@@ -206,6 +206,21 @@ void Tetris::moveCurrentPiece(Direction direction)
 	default:
 		break;
 	}
+}
+
+void Tetris::hardDrop()
+{
+	while (mBoard.doesPieceFit(*mCurrentTetromino, Tetromino::Rotation::None, 0, 1))
+	{
+		mCurrentTetromino->shift(0, +1);
+	}
+
+	auto [lineIndexes, dropPoints] = mBoard.addBlock(mCurrentTetromino);
+	int nLinesCleared = mBoard.removeLines(lineIndexes);
+
+	updateScore(nLinesCleared, dropPoints);
+
+	getNextTetromino();
 }
 
 void Tetris::initializeText(sf::Text& text, sf::Vector2f pos)

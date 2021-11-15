@@ -31,7 +31,8 @@ public:
 	Tetris(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds);
 	void update(sf::Time dt);
 	void draw();
-	void rotate();
+	void rotate(Tetromino::Rotation rotation);
+	void hardDrop();
 	void moveCurrentPiece(Direction dir);
 	bool hasLost() const;
 

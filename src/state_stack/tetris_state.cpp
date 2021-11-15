@@ -37,18 +37,32 @@ bool TetrisState::handleEvent(const sf::Event& event)
 	// Game input handling
 	CommandQueue& commands{ mWorld.getCommandQueue() };
 	//mPlayer.handleEvent(event, commands);
-
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
-		mWorld.rotate();
-
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right)
-		mWorld.moveCurrentPiece(Tetris::Direction::Right);
-
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
-		mWorld.moveCurrentPiece(Tetris::Direction::Left);
-
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down)
-		mWorld.moveCurrentPiece(Tetris::Direction::Down);
+	if (event.type == sf::Event::KeyPressed)
+	{
+		switch (event.key.code)
+		{
+		case sf::Keyboard::Q:
+			mWorld.rotate(Tetromino::Rotation::AntiClockwise);
+			break;
+		case sf::Keyboard::D:
+			mWorld.rotate(Tetromino::Rotation::Clockwise);
+			break;
+		case sf::Keyboard::Right:
+			mWorld.moveCurrentPiece(Tetris::Direction::Right);
+			break;
+		case sf::Keyboard::Left:
+			mWorld.moveCurrentPiece(Tetris::Direction::Left);
+			break;
+		case sf::Keyboard::Down:
+			mWorld.moveCurrentPiece(Tetris::Direction::Down);
+			break;
+		case sf::Keyboard::Up:
+			mWorld.hardDrop();
+			break;
+		default:
+			break;
+		}
+	}
 
 	// Escape pressed, trigger the pause screen
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
