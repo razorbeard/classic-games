@@ -33,6 +33,11 @@ SoundPlayer::SoundPlayer()
 	mSoundBuffers.load(SoundEffect::VausBallHit, "resources/sounds/vaus_ball_hit.wav");
 	mSoundBuffers.load(SoundEffect::VausLaserFire, "resources/sounds/vaus_laser_fire.wav");
 
+	mSoundBuffers.load(SoundEffect::TetroMove, "resources/sounds/tetro_move.wav");
+	mSoundBuffers.load(SoundEffect::TetroRotate, "resources/sounds/tetro_rotate.wav");
+	mSoundBuffers.load(SoundEffect::TetroDrop, "resources/sounds/tetro_drop.wav");
+	mSoundBuffers.load(SoundEffect::LineCleared, "resources/sounds/tetris_line_cleared.wav");
+
 	// Listener points towards the screen (default in SFML)
 	sf::Listener::setDirection(0.0f, 0.0f, -1.0f);
 }

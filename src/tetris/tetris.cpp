@@ -1,5 +1,6 @@
 #include "tetris/tetris.hpp"
 #include "data_tables.hpp"
+#include "audio/sound_player.hpp"
 #include "utility.hpp"
 
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -67,6 +68,7 @@ void Tetris::update(sf::Time dt)
 	}
 
 	updateTexts();
+	updateSounds();
 }
 
 void Tetris::draw()
@@ -79,6 +81,12 @@ void Tetris::draw()
 	mTarget.draw(*mCurrentTetromino);
 	mTarget.draw(*mTetrominoBag.front());
 	mBoard.display(mTarget);
+}
+
+void Tetris::updateSounds()
+{
+	mSounds.setListenerPosition(mWorldView.getCenter());
+	mSounds.removeStoppedSounds();
 }
 
 void Tetris::buildScene()
@@ -143,6 +151,8 @@ void Tetris::getNextTetromino()
 				mTetrominoBag.push(std::move(randomTetro));
 			}
 		}
+
+		mSounds.play(SoundEffect::TetroDrop);
 	}
 }
 
@@ -164,15 +174,19 @@ void Tetris::updateScore(int nLinesCleared, int dropPoints)
 	{
 	case 1:
 		mScore += 40 * (mLevel + 1);
+		mSounds.play(SoundEffect::LineCleared);
 		break;
 	case 2:
 		mScore += 100 * (mLevel + 1);
+		mSounds.play(SoundEffect::LineCleared);
 		break;
 	case 3:
 		mScore += 300 * (mLevel + 1);
+		mSounds.play(SoundEffect::LineCleared);
 		break;
 	case 4:
 		mScore += 1200 * (mLevel + 1);
+		mSounds.play(SoundEffect::LineCleared);
 		break;
 	default:
 		break;
@@ -182,7 +196,10 @@ void Tetris::updateScore(int nLinesCleared, int dropPoints)
 void Tetris::rotate(Tetromino::Rotation rotation)
 {
 	if (mBoard.doesPieceFit(*mCurrentTetromino, rotation, 0, 0))
+	{
 		mCurrentTetromino->applyRotation(rotation);
+		mSounds.play(SoundEffect::TetroRotate);
+	}
 }
 
 void Tetris::moveCurrentPiece(Direction direction)
@@ -191,11 +208,17 @@ void Tetris::moveCurrentPiece(Direction direction)
 	{
 	case Tetris::Direction::Left:
 		if (mBoard.doesPieceFit(*mCurrentTetromino, Tetromino::Rotation::None, -1, 0))
+		{
 			mCurrentTetromino->shift(-1, 0);
+			mSounds.play(SoundEffect::TetroMove);
+		}
 		break;
 	case Tetris::Direction::Right:
 		if (mBoard.doesPieceFit(*mCurrentTetromino, Tetromino::Rotation::None, 1, 0))
+		{
 			mCurrentTetromino->shift(+1, 0);
+			mSounds.play(SoundEffect::TetroMove);
+		}
 		break;
 	case Tetris::Direction::Down:
 		if (mBoard.doesPieceFit(*mCurrentTetromino, Tetromino::Rotation::None, 0, 1))

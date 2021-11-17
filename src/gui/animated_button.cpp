@@ -6,7 +6,6 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 #include <cmath>
-#include <iostream>
 
 namespace
 {

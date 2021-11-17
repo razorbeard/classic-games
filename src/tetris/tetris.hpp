@@ -41,6 +41,7 @@ public:
 private:
 	void loadTextures();
 	void buildScene();
+	void updateSounds();
 
 	void getNextTetromino();
 	void initializeText(sf::Text& text, sf::Vector2f pos);

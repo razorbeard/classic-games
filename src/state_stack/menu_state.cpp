@@ -94,6 +94,7 @@ MenuState::MenuState(StateStack& stack, Context context)
 	mGUIContainer.pack(exitButton);
 
 	// Play menu theme
+	context.music->setVolume(30.0f);
 	context.music->play(Music::MenuTheme);
 }
 

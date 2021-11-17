@@ -63,6 +63,12 @@ namespace SoundEffect
 		IntroJingle,
 		WinJingle,
 		GameOverJingle,
+
+		// Tetris
+		TetroMove,
+		TetroRotate,
+		TetroDrop,
+		LineCleared,
 	};
 }
 

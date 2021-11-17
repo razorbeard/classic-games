@@ -1,5 +1,6 @@
 #include "arkanoid_state.hpp"
 #include "commands/player.hpp"
+#include "audio/music_player.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
@@ -9,6 +10,8 @@ ArkanoidState::ArkanoidState(StateStack& stack, Context context)
 	, mPlayer(*context.player)
 {
 	mPlayer.setMissionStatus(Player::MissionRunning);
+	context.music->setVolume(30.0f);
+	context.music->play(Music::ArkanoidTheme);
 }
 
 void ArkanoidState::draw()

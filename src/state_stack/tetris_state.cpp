@@ -11,6 +11,7 @@ TetrisState::TetrisState(StateStack& stack, Context context)
 	, mPlayer(*context.player)
 {
 	mPlayer.setMissionStatus(Player::MissionRunning);
+	context.music->setVolume(16.0f);
 	context.music->play(Music::TetrisTheme);
 }
 
