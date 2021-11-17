@@ -1,5 +1,7 @@
 #include "tetris_state.hpp"
 #include "commands/player.hpp"
+#include "audio/sound_player.hpp"
+#include "audio/music_player.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
@@ -9,6 +11,7 @@ TetrisState::TetrisState(StateStack& stack, Context context)
 	, mPlayer(*context.player)
 {
 	mPlayer.setMissionStatus(Player::MissionRunning);
+	context.music->play(Music::TetrisTheme);
 }
 
 void TetrisState::draw()

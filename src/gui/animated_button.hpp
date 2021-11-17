@@ -13,6 +13,7 @@ namespace GUI
 		enum Identifier
 		{
 			ArkanoidMenu,
+			TetrisMenu,
 			QuitMenu,
 			IdentifierCount
 		};
@@ -37,4 +38,4 @@ namespace GUI
 	};
 }
 
-#endif // !ANIMATED_BUTTON_HPP
+#endif // ANIMATED_BUTTON_HPP

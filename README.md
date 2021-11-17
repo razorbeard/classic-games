@@ -43,6 +43,7 @@ Resources used for making this compilation are provided by various artists :
   
   * [Cunning plan](https://opengameart.org/content/cunning-plan-short-seamless-loop) (menu_theme.ogg) by congusbongus.
   * [On The Offensive](https://opengameart.org/content/8-bit-theme-on-the-offensive) (arkanoid_theme.ogg) by Wolfgang.
+  * [Stage 1](https://opengameart.org/content/4-chiptunes-adventure) (tetris_theme.ogg) from Chiptune Adventures, by Juhani Junkala.
 </details>
 
 <details>

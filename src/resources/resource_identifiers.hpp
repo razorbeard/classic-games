@@ -72,6 +72,7 @@ namespace Music
 	{
 		MenuTheme,
 		ArkanoidTheme,
+		TetrisTheme,
 	};
 }
 

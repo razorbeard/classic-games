@@ -24,32 +24,35 @@ MenuState::MenuState(StateStack& stack, Context context)
 	, mBackgroundSprite(context.textures->get(Textures::SelectText))
 	, mThreadAvailable(true)
 	, mStartTransition(false)
+	, mNextState(States::None)
 	, mGUIContainer()
 {
+	sf::Vector2u windowSize{ context.window->getSize() };
+
 	// Transition effect
 	centerOrigin(mCircle);
 	mCircle.setFillColor(sf::Color::Transparent);
 	mCircle.setOutlineColor(sf::Color::Black);
-	mCircle.setPosition(sf::Vector2f(context.window->getSize() / 2u));
+	mCircle.setPosition(sf::Vector2f(windowSize / 2u));
 	mCircle.setOutlineThickness(-mCircle.getRadius());
 
 	// Background sprites settings
 	centerOrigin(mLargeRingBackground);
-	mLargeRingBackground.setPosition(sf::Vector2f(context.window->getSize() / 2u));
+	mLargeRingBackground.setPosition(sf::Vector2f(windowSize / 2u));
 	mLargeRingBackground.setColor(sf::Color(0, 0, 0, 125));
 
 	centerOrigin(mSmallRingBackground);
-	mSmallRingBackground.setPosition(sf::Vector2f(context.window->getSize() / 2u));
+	mSmallRingBackground.setPosition(sf::Vector2f(windowSize / 2u));
 	mSmallRingBackground.setColor(sf::Color(0, 0, 0, 125));
 	mSmallRingBackground.setRotation(90.0f);
 
 	// Selection text sprite
 	centerOrigin(mBackgroundSprite);
-	mBackgroundSprite.setPosition(sf::Vector2f(context.window->getSize() / 2u) + sf::Vector2f(0.0f, -200.0f));
+	mBackgroundSprite.setPosition(sf::Vector2f(windowSize / 2u) + sf::Vector2f(0.0f, -200.0f));
 
 	// GUI setup
 	auto arkanoidButton = std::make_shared<GUI::AnimatedButton>(GUI::AnimatedButton::ArkanoidMenu, context);
-	arkanoidButton->setPosition(sf::Vector2f(context.window->getSize() / 2u) + sf::Vector2f(0.0f, 75.0f));
+	arkanoidButton->setPosition(sf::Vector2f(windowSize.x * 0.33f, windowSize.y/2u));
 	arkanoidButton->setToggle(true);
 	arkanoidButton->setText("Arkanoid", 40, 3.0f);
 	arkanoidButton->setCallback([this]()
@@ -60,10 +63,26 @@ MenuState::MenuState(StateStack& stack, Context context)
 																		  std::this_thread::sleep_for(1.5s);
 																		  mStartTransition = true;
 																	  });
+									mNextState = States::ID::Arkanoid;
+								});
+
+	auto tetrisButton = std::make_shared<GUI::AnimatedButton>(GUI::AnimatedButton::TetrisMenu, context);
+	tetrisButton->setPosition(sf::Vector2f(windowSize.x * 0.66f, windowSize.y / 2u));
+	tetrisButton->setToggle(true);
+	tetrisButton->setText("Tetris", 40, 3.0f);
+	tetrisButton->setCallback([this]()
+								{
+									mThreadAvailable = false;
+									transitionTimer = new std::thread([&]()
+																	  {
+																		  std::this_thread::sleep_for(1.5s);
+																		  mStartTransition = true;
+																	  });
+									mNextState = States::ID::Tetris;
 								});
 
 	auto exitButton = std::make_shared<GUI::AnimatedButton>(GUI::AnimatedButton::QuitMenu, context);
-	exitButton->setPosition(sf::Vector2f(context.window->getSize() / 7u) + sf::Vector2f(0.0f, 650.0f));
+	exitButton->setPosition(sf::Vector2f(windowSize / 10u) + sf::Vector2f(0.0f, 600.0f));
 	exitButton->setText("Quit", 40, 3.0f);
 	exitButton->setCallback([this]()
 							{
@@ -71,6 +90,7 @@ MenuState::MenuState(StateStack& stack, Context context)
 							});
 
 	mGUIContainer.pack(arkanoidButton);
+	mGUIContainer.pack(tetrisButton);
 	mGUIContainer.pack(exitButton);
 
 	// Play menu theme
@@ -111,8 +131,7 @@ bool MenuState::update(sf::Time dt)
 	if (mCircle.getOutlineThickness() <= mCircle.getRadius())
 		mCircle.setOutlineThickness(mCircle.getOutlineThickness() + 10.0f);
 
-	// Launch Arkanoid state when an other thread has finished sleeping
-	// NB: Behavior to modify when adding differents types of buttons !
+	// Launch the next state when an other thread has finished sleeping
 	if (mStartTransition)
 	{
 		// Clean the memory before jumping to the next state
@@ -121,7 +140,7 @@ bool MenuState::update(sf::Time dt)
 		transitionTimer = nullptr;
 
 		requestStackPop();
-		requestStackPush(States::Arkanoid);
+		requestStackPush(mNextState);
 	}
 
 	return true;
@@ -130,7 +149,7 @@ bool MenuState::update(sf::Time dt)
 bool MenuState::handleEvent(const sf::Event& event)
 {
 	// Wait for circle animation to fade before handling events
-	// If a key has been pressed, events or not handling anymore
+	// If a key has been pressed, events are not handled anymore
 	if (mCircle.getOutlineThickness() >= 0 && mThreadAvailable)
 		mGUIContainer.handleEvent(event);
 

@@ -24,6 +24,7 @@ private:
 
 	sf::Time mScaleEffectTime;
 	bool mThreadAvailable;
+	States::ID mNextState;
 	std::atomic_bool mStartTransition;
 
 	sf::Sprite mLargeRingBackground;

@@ -6,6 +6,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 #include <cmath>
+#include <iostream>
 
 namespace
 {
@@ -18,7 +19,7 @@ namespace GUI
 	AnimatedButton::AnimatedButton(Identifier id, State::Context context)
 		: Button(context)
 		, mIdentifier(id)
-		, mSprite(context.textures->get(Textures::Buttons))
+		, mSprite(context.textures->get(Textures::Buttons), Table[id].textureRect)
 	{
 		centerOrigin(mSprite);
 		changeTexture(Normal);

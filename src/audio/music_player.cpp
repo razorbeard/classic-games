@@ -6,6 +6,7 @@ MusicPlayer::MusicPlayer()
 	, mVolume(100.0f)
 {
 	mFilenames[Music::ArkanoidTheme] = "resources/music/arkanoid_theme.ogg";
+	mFilenames[Music::TetrisTheme] = "resources/music/tetris_theme.ogg";
 	mFilenames[Music::MenuTheme] = "resources/music/menu_theme.ogg";
 }
 

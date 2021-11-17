@@ -106,6 +106,7 @@ std::vector<ButtonData> initializeButtonData()
 	std::vector<ButtonData> data(GUI::AnimatedButton::IdentifierCount);
 
 	data[GUI::AnimatedButton::ArkanoidMenu].textureRect = sf::IntRect(0, 0, 160, 160);
+	data[GUI::AnimatedButton::TetrisMenu].textureRect = sf::IntRect(160, 0, 160, 160);
 	data[GUI::AnimatedButton::QuitMenu].textureRect = sf::IntRect(0, 160, 84, 84);
 
 	return data;
