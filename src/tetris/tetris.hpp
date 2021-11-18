@@ -15,6 +15,7 @@
 #include <unordered_map>
 
 class SoundPlayer;
+class MusicPlayer;
 
 class Tetris : private sf::NonCopyable
 {
@@ -28,7 +29,7 @@ public:
 	};
 
 public:
-	Tetris(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds);
+	Tetris(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds, MusicPlayer& music);
 	void update(sf::Time dt);
 	void draw();
 	void rotate(Tetromino::Rotation rotation);
@@ -56,6 +57,7 @@ private:
 	TextureHolder mTextures;
 	FontHolder& mFonts;
 	SoundPlayer& mSounds;
+	MusicPlayer& mMusic;
 
 	sf::Time mElapsedTime;
 

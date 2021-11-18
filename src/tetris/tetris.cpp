@@ -1,6 +1,7 @@
 #include "tetris/tetris.hpp"
 #include "data_tables.hpp"
 #include "audio/sound_player.hpp"
+#include "audio/music_player.hpp"
 #include "utility.hpp"
 
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -13,13 +14,14 @@ namespace
 	//const int squareLength = Table[0].textureRect.width;
 }
 
-Tetris::Tetris(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds)
+Tetris::Tetris(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds, MusicPlayer& music)
 	: mTarget(outputTarget)
 	, mSceneTexture()
 	, mWorldView(outputTarget.getDefaultView())
 	, mTextures()
 	, mFonts(fonts)
 	, mSounds(sounds)
+	, mMusic(music)
 	, mWorldBounds(0.0f, 0.0f, mWorldView.getSize().x, mWorldView.getSize().y)
 	, mElapsedTime(sf::Time::Zero)
 	, mCurrentTetromino(nullptr)
@@ -167,7 +169,15 @@ void Tetris::updateScore(int nLinesCleared, int dropPoints)
 	mLinesCleared += nLinesCleared;
 	
 	// Each 10 lines cleared, the level increase
+	int oldLevel{ mLevel };
 	mLevel = mLinesCleared / 10;
+
+	// Change the pitch of the music every 5 levels
+	if (mLevel != oldLevel && mLevel%5 == 0)
+	{
+		float pitch{ std::min(1.5f, mMusic.getPitch()+0.1f) };
+		mMusic.setPitch(pitch);
+	}
 
 	// Original Nintendo scoring system
 	switch (nLinesCleared)

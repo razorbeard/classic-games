@@ -20,6 +20,8 @@ public:
 
 	void setPaused(bool paused);
 	void setVolume(float volume);
+	void setPitch(float pitch);
+	float getPitch() const;
 
 private:
 	sf::Music mMusic;

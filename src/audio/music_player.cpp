@@ -39,3 +39,13 @@ void MusicPlayer::setPaused(bool paused)
 	else
 		mMusic.play();
 }
+
+void MusicPlayer::setPitch(float pitch)
+{
+	mMusic.setPitch(pitch);
+}
+
+float MusicPlayer::getPitch() const
+{
+	return mMusic.getPitch();
+}
