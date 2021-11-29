@@ -1,4 +1,4 @@
-#include "button.hpp"
+#include "gui/button.hpp"
 #include "utility.hpp"
 #include "resources/resource_holder.hpp"
 
@@ -11,10 +11,10 @@ namespace GUI
 		: mCallback()
 		, mCurrentType(Normal)
 		, mTimer(sf::Time::Zero)
-		, mShowText(true)
 		, mText("", context.fonts->get(Fonts::Upheaval))
-		, mIsToggle(false)
 		, mSounds(*context.sounds)
+		, mShowText(true)
+		, mIsToggle(false)
 	{
 		centerOrigin(mText);
 		changeTexture(Normal);

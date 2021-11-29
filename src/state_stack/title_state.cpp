@@ -1,4 +1,4 @@
-#include "title_state.hpp"
+#include "state_stack/title_state.hpp"
 #include "audio/sound_player.hpp"
 #include "utility.hpp"
 
@@ -18,12 +18,12 @@ TitleState::TitleState(StateStack& stack, Context context)
 	, mCircle(length(sf::Vector2f(context.window->getSize() / 2u)) + 15.0f, 16)
 	, mTitle(context.textures->get(Textures::TitleText))
 	, mText("PRESS ANY KEY !", context.fonts->get(Fonts::Sansation))
-	, mShowText(true)
 	, mSounds(*context.sounds)
 	, mMaxBlinkingTime(sf::seconds(0.5f))
 	, mTextEffectTime(sf::Time::Zero)
-	, mThreadAvailable(true)
 	, mStartTransition(false)
+	, mShowText(true)
+	, mThreadAvailable(true)
 {
 	// Convex hull of the window: we add an extra margin for the radius to avoid
 	// empty corners when rendering (we prefer a smaller number of segments)

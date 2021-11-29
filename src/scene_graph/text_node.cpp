@@ -1,4 +1,4 @@
-#include "text_node.hpp"
+#include "scene_graph/text_node.hpp"
 #include "resources/resource_holder.hpp"
 #include "utility.hpp"
 

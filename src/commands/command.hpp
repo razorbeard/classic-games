@@ -1,7 +1,7 @@
 #ifndef COMMAND_HPP
 #define COMMAND_HPP
 
-#include "category.hpp"
+#include "commands/category.hpp"
 
 #include <SFML/System/Time.hpp>
 
@@ -13,7 +13,7 @@ class SceneNode;
 // Any scene node can be triggered by a function object
 struct Command
 {
-	typedef std::function<void(SceneNode&, sf::Time)> Action;
+	using Action = std::function<void(SceneNode&, sf::Time)>;
 
 	Command();
 

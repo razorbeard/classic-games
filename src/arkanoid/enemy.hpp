@@ -29,10 +29,10 @@ private:
 	virtual bool isMarkedForRemoval() const override;
 
 private:
+	Type mType;
 	Animation mSpriteAnimation;
 	Animation mExplosion;
 
-	Type mType;
 	bool mShowExplosion;
 };
 

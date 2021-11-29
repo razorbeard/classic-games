@@ -1,11 +1,11 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include "command.hpp"
+#include "commands/command.hpp"
 
 #include <SFML/Window/Event.hpp>
 
-#include <map>
+#include <unordered_map>
 
 class CommandQueue;
 
@@ -45,8 +45,8 @@ private:
 	static bool	isRealtimeAction(Action action);
 
 private:
-	std::map<sf::Keyboard::Key, Action>	mKeyBinding;
-	std::map<Action, Command> mActionBinding;
+	std::unordered_map<sf::Keyboard::Key, Action> mKeyBinding;
+	std::unordered_map<Action, Command> mActionBinding;
 	MissionStatus mCurrentMissionStatus;
 };
 

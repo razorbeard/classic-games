@@ -1,7 +1,7 @@
 #ifndef PAUSE_STATE_HPP
 #define PAUSE_STATE_HPP
 
-#include "state.hpp"
+#include "state_stack/state.hpp"
 #include "gui/container.hpp"
 
 #include <SFML/System/Time.hpp>
@@ -19,9 +19,9 @@ public:
 	virtual bool handleEvent(const sf::Event& event) override;
 
 private:
-	sf::RectangleShape mRectangleBackground;
 	sf::Text mPausedText;
 	GUI::Container mGUIContainer;
+	sf::RectangleShape mRectangleBackground;
 };
 
 #endif // PAUSE_STATE_HPP

@@ -1,7 +1,7 @@
 #ifndef COMMAND_QUEUE_HPP
 #define COMMAND_QUEUE_HPP
 
-#include "command.hpp"
+#include "commands/command.hpp"
 
 #include <queue>
 

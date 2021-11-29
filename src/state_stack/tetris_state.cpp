@@ -1,4 +1,4 @@
-#include "tetris_state.hpp"
+#include "state_stack/tetris_state.hpp"
 #include "commands/player.hpp"
 #include "audio/sound_player.hpp"
 #include "audio/music_player.hpp"
@@ -31,7 +31,6 @@ bool TetrisState::update(sf::Time dt)
 	mWorld.update(dt);
 
 	CommandQueue& commands{ mWorld.getCommandQueue() };
-	//mPlayer.handleRealtimeInput(commands);
 
 	return true;
 }
@@ -40,7 +39,7 @@ bool TetrisState::handleEvent(const sf::Event& event)
 {
 	// Game input handling
 	CommandQueue& commands{ mWorld.getCommandQueue() };
-	//mPlayer.handleEvent(event, commands);
+
 	if (event.type == sf::Event::KeyPressed)
 	{
 		switch (event.key.code)

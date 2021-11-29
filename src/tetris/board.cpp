@@ -1,14 +1,13 @@
 #include "tetris/board.hpp"
 
-#include <iostream>
 #include <algorithm>
 
 Board::Board(int width, int height)
 	: mCells(height, std::vector<Field>(width))
+	, mSpriteContainer(nullptr)
+	, mOffset(0, 0)
 	, mWidth(width)
 	, mHeight(height)
-	, mOffset(0, 0)
-	, mSpriteContainer(nullptr)
 {
 }
 
@@ -46,7 +45,9 @@ void Board::display(sf::RenderTarget& target)
 		{
 			if (mCells[i][j].mSprite != nullptr)
 			{
-				mCells[i][j].mSprite->setPosition(40*j + mOffset.x, 40*i + mOffset.y);
+				int const squareLength{ mCells[i][j].mSprite->getTextureRect().width };
+
+				mCells[i][j].mSprite->setPosition(squareLength*j + mOffset.x, squareLength*i + mOffset.y);
 				target.draw(*mCells[i][j].mSprite);
 			}
 		}

@@ -1,19 +1,10 @@
 #include "utility.hpp"
 #include "entity.hpp"
-#include "graphics/animation.hpp"
-#include "arkanoid/block.hpp"
-
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Text.hpp>
-#include <SFML/Graphics/Shape.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/CircleShape.hpp>
 
 #include <random>
 #include <cmath>
 #include <ctime>
 #include <cassert>
-#include <algorithm>
 
 namespace
 {
@@ -24,34 +15,6 @@ namespace
 	}
 
 	auto RandomEngine{ createRandomEngine() };
-}
-
-void centerOrigin(sf::Shape& shape)
-{
-	sf::FloatRect bounds{ shape.getLocalBounds() };
-	shape.setOrigin(std::floor(bounds.left + bounds.width / 2.0f),
-					std::floor(bounds.top + bounds.height / 2.0f));
-}
-
-void centerOrigin(sf::Sprite& sprite)
-{
-	sf::FloatRect bounds{ sprite.getLocalBounds() };
-	sprite.setOrigin(std::floor(bounds.left + bounds.width / 2.0f),
-					 std::floor(bounds.top + bounds.height / 2.0f));
-}
-
-void centerOrigin(sf::Text& text)
-{
-	sf::FloatRect bounds{ text.getLocalBounds() };
-	text.setOrigin(std::floor(bounds.left + bounds.width / 2.0f),
-				   std::floor(bounds.top + bounds.height / 2.0f));
-}
-
-void centerOrigin(Animation& animation)
-{
-	sf::FloatRect bounds{ animation.getLocalBounds() };
-	animation.setOrigin(std::floor(bounds.left + bounds.width / 2.0f),
-						std::floor(bounds.top + bounds.height / 2.0f));
 }
 
 float toDegree(float radian)
@@ -92,24 +55,6 @@ float dotProduct(sf::Vector2f a, sf::Vector2f b)
 	return a.x * b.x + a.y * b.y;
 }
 
-bool isColliding(const sf::CircleShape& a, const sf::CircleShape& b)
-{
-	return length(sf::Vector2f(a.getPosition().x - b.getPosition().x, a.getPosition().y - b.getPosition().y)) <= a.getRadius() + b.getRadius();
-}
-
-bool isColliding(const sf::RectangleShape& a, const sf::CircleShape& b)
-{
-	// To detect if a circle is overlapping a rectangle, we first find
-	// the vector of the neareast point of the surface on the rectangle
-	// to the middle of the circle.
-	// Then, if the distance of this vector is less than the radius of the circle, theres a collision
-	sf::Vector2f nearestPoint{}; // neareast point on the surface of the rect
-	nearestPoint.x = std::max(a.getGlobalBounds().top, std::min(a.getGlobalBounds().top + a.getGlobalBounds().width, b.getPosition().x));
-	nearestPoint.y = std::max(a.getGlobalBounds().left, std::min(a.getGlobalBounds().left + a.getGlobalBounds().height, b.getPosition().y));
-
-	return length(sf::Vector2f(nearestPoint.x - b.getPosition().x, nearestPoint.y - b.getPosition().y)) <= b.getRadius();
-}
-
 void adaptVelocityOnHit(Entity& bouncingEntity, const Entity& entity)
 {
 	// "Pseudo" Circle-AABB collision resolution
@@ -134,13 +79,13 @@ void adaptVelocityOnHit(Entity& bouncingEntity, const Entity& entity)
 
 	// Find the best direction where the hit occurs
 	int direction{ -1 };
-	float max{ 0.0f };
+	float dotProdMax{ 0.0f };
 	for (int i{ 0 }; i < normals.size(); ++i)
 	{
 		float const vectProd = dotProduct(penetration, normals[i]);
-		if (vectProd > max)
+		if (vectProd > dotProdMax)
 		{
-			max = vectProd;
+			dotProdMax = vectProd;
 			direction = i;
 		}
 	}

@@ -1,4 +1,4 @@
-#include "sound_node.hpp"
+#include "scene_graph/sound_node.hpp"
 #include "audio/sound_player.hpp"
 
 SoundNode::SoundNode(SoundPlayer& player)

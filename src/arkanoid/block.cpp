@@ -1,8 +1,8 @@
-#include "block.hpp"
+#include "arkanoid/block.hpp"
 #include "data_tables.hpp"
 #include "resources/resource_holder.hpp"
 #include "utility.hpp"
-#include "power_up.hpp"
+#include "arkanoid/power_up.hpp"
 #include "commands/command_queue.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -16,13 +16,13 @@ Block::Block(Color color, const TextureHolder& textures, Grid* grid)
 	: Entity(Table[color].hitpoints, grid)
 	, mColor(color)
 	, mSpriteAnimation(textures.get(Table[color].texture), Table[color].textureRect)
+	, mDropPowerUpCommand()
+	, mGrid(grid)
 	, mOldHitpoints(Table[color].hitpoints)
 	, mRemovalFlag(false)
 	, mShowShinning(false)
 	, mCanDropPowerUp(true)
 	, mSpawnedPowerUp(false)
-	, mDropPowerUpCommand()
-	, mGrid(grid)
 {
 	mSpriteAnimation.setFrameSize(Table[color].frameSize);
 	mSpriteAnimation.setNumFrames(Table[color].numFrames);

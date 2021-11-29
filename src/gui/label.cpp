@@ -1,4 +1,4 @@
-#include "label.hpp"
+#include "gui/label.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 

@@ -1,4 +1,4 @@
-#include "game_over_state.hpp"
+#include "state_stack/game_over_state.hpp"
 #include "commands/player.hpp"
 #include "audio/sound_player.hpp"
 #include "audio/music_player.hpp"

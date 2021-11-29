@@ -1,7 +1,7 @@
 #ifndef PARTICLE_NODE_HPP
 #define PARTICLE_NODE_HPP
 
-#include "scene_node.hpp"
+#include "scene_graph/scene_node.hpp"
 #include "graphics/particle.hpp"
 #include "resources/resource_identifiers.hpp"
 

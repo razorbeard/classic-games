@@ -5,8 +5,6 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 
-#include <iostream>
-
 namespace
 {
 	// 1 Tetromino = 4 squares pieces, each located with a 1D index in a NxN matrix
@@ -23,10 +21,10 @@ namespace
 }
 
 Tetromino::Tetromino(int id, std::unordered_map<int, sf::Sprite>* spriteContainer)
-	: mId(id)
-	, mSpriteContainer(spriteContainer)
+	: mSpriteContainer(spriteContainer)
 	, mCoordinates(0, 0)
 	, mOffset(0, 0)
+	, mId(id)
 {
 	// Convert back to 2D each square position, and store them in a vector
 	mSquaresInfo.first = BlockInfo[mId][4];

@@ -1,4 +1,4 @@
-#include "pause_state.hpp"
+#include "state_stack/pause_state.hpp"
 #include "gui/button.hpp"
 #include "audio/music_player.hpp"
 #include "audio/sound_player.hpp"

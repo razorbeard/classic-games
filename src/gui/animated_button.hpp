@@ -1,7 +1,7 @@
 #ifndef ANIMATED_BUTTON_HPP
 #define ANIMATED_BUTTON_HPP
 
-#include "button.hpp"
+#include "gui/button.hpp"
 
 #include <SFML/Graphics/Sprite.hpp>
 

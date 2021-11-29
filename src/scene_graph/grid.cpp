@@ -2,9 +2,9 @@
 #include "entity.hpp"
 
 Grid::Grid(int width, int height, float cellSize)
-	: mCellSize(cellSize)
-	, mCells(gaugeCellSize(width, cellSize),
+	: mCells(gaugeCellSize(width, cellSize),
 			 std::vector<Cell>(gaugeCellSize(height, cellSize)))
+	, mCellSize(cellSize)
 {
 }
 

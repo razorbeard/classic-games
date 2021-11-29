@@ -1,5 +1,5 @@
-#include "emitter_node.hpp"
-#include "particle_node.hpp"
+#include "scene_graph/emitter_node.hpp"
+#include "scene_graph/particle_node.hpp"
 #include "commands/command_queue.hpp"
 
 EmitterNode::EmitterNode(Particle::Type type)

@@ -1,4 +1,4 @@
-#include "trapdoor.hpp"
+#include "arkanoid/trapdoor.hpp"
 #include "resources/resource_holder.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>

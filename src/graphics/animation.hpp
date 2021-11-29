@@ -47,12 +47,11 @@ private:
 	sf::Vector2i mFrameSize;
 	std::size_t mNumFrames;
 	std::size_t mCurrentFrame;
+	sf::IntRect mInitialTextRect;
 	sf::Time mDuration;
 	sf::Time mElapsedTime;
 	int mSpacing;
 	bool mRepeat;
-
-	sf::IntRect mInitialTextRect;
 };
 
 #endif // ANIMATION_HPP

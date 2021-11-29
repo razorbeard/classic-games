@@ -1,4 +1,4 @@
-#include "particle_node.hpp"
+#include "scene_graph/particle_node.hpp"
 #include "data_tables.hpp"
 #include "resources/resource_holder.hpp"
 

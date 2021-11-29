@@ -1,7 +1,7 @@
 #ifndef STATE_HPP
 #define STATE_HPP
 
-#include "state_identifiers.hpp"
+#include "state_stack/state_identifiers.hpp"
 #include "resources/resource_identifiers.hpp"
 
 #include <SFML/System/Time.hpp>
@@ -22,7 +22,7 @@ class SoundPlayer;
 class State
 {
 public:
-	typedef std::unique_ptr<State> Ptr;
+	using Ptr = std::unique_ptr<State>;
 
 	// Holder of shared objects between all states of the game
 	// Used to save memory by avoiding to load the same resources for every state

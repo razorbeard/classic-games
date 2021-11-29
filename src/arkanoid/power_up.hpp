@@ -37,8 +37,8 @@ protected:
 
 private:
 	Type mType;
-	bool mRemovalFlag;
 	Animation mSpriteAnimation;
+	bool mRemovalFlag;
 };
 
 #endif // POWER_UP_HPP

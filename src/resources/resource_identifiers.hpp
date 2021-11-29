@@ -22,7 +22,7 @@ namespace Textures
 
 		// Arkanoid
 		Arkanoid,
-		PipeBackground,
+		ArkanoidBackground,
 
 		// Tileset
 		BackgroundTile,
@@ -86,8 +86,8 @@ namespace Music
 template <typename Resource, typename Identifier>
 class ResourceHolder;
 
-typedef ResourceHolder<sf::Texture, Textures::ID>        TextureHolder;
-typedef ResourceHolder<sf::Font, Fonts::ID>              FontHolder;
-typedef ResourceHolder<sf::SoundBuffer, SoundEffect::ID> SoundBufferHolder;
+using TextureHolder = ResourceHolder<sf::Texture, Textures::ID>;
+using FontHolder = ResourceHolder<sf::Font, Fonts::ID>;
+using SoundBufferHolder = ResourceHolder<sf::SoundBuffer, SoundEffect::ID>;
 
 #endif // RESOURCE_IDENTIFIERS_HPP

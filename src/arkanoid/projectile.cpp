@@ -1,4 +1,4 @@
-#include "projectile.hpp"
+#include "arkanoid/projectile.hpp"
 #include "utility.hpp"
 #include "resources/resource_holder.hpp"
 #include "data_tables.hpp"
@@ -69,8 +69,6 @@ bool Projectile::isMarkedForRemoval() const
 void Projectile::remove()
 {
 	Entity::remove();
-
-	//mShowDestruction = false;
 }
 
 unsigned int Projectile::getCategory() const

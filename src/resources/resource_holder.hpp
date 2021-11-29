@@ -1,7 +1,7 @@
 #ifndef RESOURCE_HOLDER_HPP
 #define RESOURCE_HOLDER_HPP
 
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <memory>
 #include <stdexcept>
@@ -59,7 +59,7 @@ private:
 	}
 
 private:
-	std::map<Identifier, std::unique_ptr<Resource>>	mResourceMap;
+	std::unordered_map<Identifier, std::unique_ptr<Resource>> mResourceMap;
 };
 
 #endif // RESOURCE_HOLDER_HPP

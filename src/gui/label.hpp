@@ -1,7 +1,7 @@
 #ifndef LABEL_HPP
 #define LABEL_HPP
 
-#include "component.hpp"
+#include "gui/component.hpp"
 #include "resources/resource_identifiers.hpp"
 #include "resources/resource_holder.hpp"
 

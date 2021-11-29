@@ -4,10 +4,10 @@
 #include <cassert>
 
 Entity::Entity(int hitpoints, Grid* grid)
-	: mVelocity()
-	, mHitpoints(hitpoints)
-	, mGrid(grid)
+	: mGrid(grid)
 	, mCells()
+	, mVelocity()
+	, mHitpoints(hitpoints)
 {
 }
 

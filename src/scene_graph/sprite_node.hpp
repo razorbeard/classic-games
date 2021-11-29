@@ -1,7 +1,7 @@
 #ifndef SPRITE_NODE_HPP
 #define SPRITE_NODE_HPP
 
-#include "scene_node.hpp"
+#include "scene_graph/scene_node.hpp"
 
 #include <SFML/Graphics/Sprite.hpp>
 

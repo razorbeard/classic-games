@@ -7,7 +7,7 @@
 #include <SFML/System/NonCopyable.hpp>
 #include <SFML/Audio/Music.hpp>
 
-#include <map>
+#include <unordered_map>
 #include <string>
 
 class MusicPlayer : private sf::NonCopyable
@@ -25,7 +25,7 @@ public:
 
 private:
 	sf::Music mMusic;
-	std::map<Music::ID, std::string> mFilenames;
+	std::unordered_map<Music::ID, std::string> mFilenames;
 	float mVolume;
 };
 

@@ -1,7 +1,7 @@
 #ifndef EMITTER_NODE_HPP
 #define EMITTER_NODE_HPP
 
-#include "scene_node.hpp"
+#include "scene_graph/scene_node.hpp"
 #include "graphics/particle.hpp"
 
 class ParticleNode;

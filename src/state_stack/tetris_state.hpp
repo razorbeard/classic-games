@@ -1,7 +1,7 @@
 #ifndef TETRIS_STATE_HPP
 #define TETRIS_STATE_HPP
 
-#include "state.hpp"
+#include "state_stack/state.hpp"
 #include "tetris/tetris.hpp"
 
 #include <SFML/System/Time.hpp>

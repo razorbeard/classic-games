@@ -1,4 +1,4 @@
-#include "scene_node.hpp"
+#include "scene_graph/scene_node.hpp"
 #include "commands/command.hpp"
 #include "utility.hpp"
 

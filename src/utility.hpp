@@ -5,37 +5,28 @@
 
 namespace sf
 {
-	class Shape;
-	class Sprite;
-	class Text;
 	class CircleShape;
 	class RectangleShape;
 }
 
-class Animation;
 class Entity;
 
-// Call setOrigin() with the center of the object
-void centerOrigin(sf::Shape& shape);
-void centerOrigin(sf::Sprite& sprite);
-void centerOrigin(sf::Text& text);
-void centerOrigin(Animation& animation);
+template <typename Object>
+void centerOrigin(Object& object)
+{
+	sf::FloatRect bounds{ object.getLocalBounds() };
+	object.setOrigin(std::floor(bounds.left + bounds.width / 2.0f),
+		std::floor(bounds.top + bounds.height / 2.0f));
+}
 
-// Degree/radian conversion
 float toDegree(float radian);
 float toRadian(float degree);
 
-// Random number generation
 int randomInt(int exclusiveMax);
 float randomFloat(int exclusiveMin, int exclusiveMax);
 
-// Vector operations
 float length(sf::Vector2f vector);
 sf::Vector2f unitVector(sf::Vector2f vector);
-
-// Collision detection
-bool isColliding(const sf::CircleShape& a, const sf::CircleShape& b);
-bool isColliding(const sf::RectangleShape& a, const sf::CircleShape& b);
 
 void adaptVelocityOnHit(Entity& bouncingEntity, const Entity& entity);
 

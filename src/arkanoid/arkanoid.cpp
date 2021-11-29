@@ -1,12 +1,12 @@
-#include "arkanoid.hpp"
+#include "arkanoid/arkanoid.hpp"
 #include "data_tables.hpp"
-#include "power_up.hpp"
+#include "arkanoid/power_up.hpp"
 #include "scene_graph/text_node.hpp"
 #include "scene_graph/sprite_node.hpp"
 #include "scene_graph/sound_node.hpp"
-#include "enemy.hpp"
-#include "projectile.hpp"
-#include "trapdoor.hpp"
+#include "arkanoid/enemy.hpp"
+#include "arkanoid/projectile.hpp"
+#include "arkanoid/trapdoor.hpp"
 #include "audio/sound_player.hpp"
 #include "utility.hpp"
 #include "scene_graph/particle_node.hpp"
@@ -23,19 +23,21 @@ Arkanoid::Arkanoid(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlaye
 	: mTarget(outputTarget)
 	, mSceneTexture()
 	, mWorldView(outputTarget.getDefaultView())
+	, mWorldBounds(0.0f, 0.0f, mWorldView.getSize().x, mWorldView.getSize().y)
 	, mTextures()
 	, mFonts(fonts)
 	, mSounds(sounds)
 	, mSceneGraph()
 	, mSceneLayers()
 	, mGrid(mWorldView.getSize().x, mWorldView.getSize().y + 100.0f, 100.0f)
+	, mPlayerVaus(nullptr)
 	, mBackgroundSprite(nullptr)
 	, mPlayerScore(nullptr)
 	, mPlayerLives(nullptr)
-	, mWorldBounds(0.0f, 0.0f, mWorldView.getSize().x, mWorldView.getSize().y)
+	, mLeftTrapdoor(nullptr)
+	, mRightTrapdoor(nullptr)
 	, mSpawnPosition(mWorldView.getSize().x / 2.0f, mWorldView.getSize().y * 0.95f)
 	, mElapsedTime(sf::Time::Zero)
-	, mPlayerVaus(nullptr)
 	, mBlocksRemaining(0)
 	, mScore(0)
 	, mLives(3)
@@ -53,7 +55,7 @@ void Arkanoid::loadTextures()
 	// sf::Texture::setRepeated() is not available through sf::Sprite
 	mTextures.load(Textures::Arkanoid, "resources/textures/arkanoid.png");
 	mTextures.load(Textures::BackgroundTile, "resources/textures/arkanoid.png", sf::IntRect(287, 0, 48, 48));
-	mTextures.load(Textures::PipeBackground, "resources/textures/pipe_background.png");
+	mTextures.load(Textures::ArkanoidBackground, "resources/textures/arkanoid_background.png");
 	mTextures.load(Textures::Particle, "resources/textures/particles.png");
 }
 
@@ -198,9 +200,9 @@ void Arkanoid::setBackgroundSprite()
 
 void Arkanoid::setFieldSprite()
 {
-	std::unique_ptr<SpriteNode> pipeBackground{ new SpriteNode{mTextures.get(Textures::PipeBackground)} };
-	pipeBackground->setPosition(0.0f, 84.0f);
-	mSceneLayers[Main]->attachChild(std::move(pipeBackground));
+	std::unique_ptr<SpriteNode> background{ new SpriteNode{mTextures.get(Textures::ArkanoidBackground)} };
+	background->setPosition(0.0f, 0.0f);
+	mSceneLayers[Main]->attachChild(std::move(background));
 
 	// Set the trapdoors : enemies spawns from there
 	std::unique_ptr<Trapdoor> leftTrapdoor{ new Trapdoor(mTextures) };
@@ -216,18 +218,6 @@ void Arkanoid::setFieldSprite()
 
 void Arkanoid::setStatisticsText()
 {
-	std::unique_ptr<TextNode> scoreText{ new TextNode{mFonts, Fonts::EightBitArcade, "Score" , 64} };
-	scoreText->setPosition(mWorldView.getSize().x / 5.0f, 22.0f);
-	mSceneLayers[Background]->attachChild(std::move(scoreText));
-
-	std::unique_ptr<TextNode> livesText{ new TextNode{mFonts, Fonts::EightBitArcade, "Lives" , 64} };
-	livesText->setPosition(mWorldView.getSize().x / 2.0f, 22.0f);
-	mSceneLayers[Background]->attachChild(std::move(livesText));
-
-	std::unique_ptr<TextNode> actionText{ new TextNode{mFonts, Fonts::EightBitArcade, "Action" , 64} };
-	actionText->setPosition(mWorldView.getSize().x - mWorldView.getSize().x / 5.0f, 22.0f);
-	mSceneLayers[Background]->attachChild(std::move(actionText));
-
 	std::unique_ptr<TextNode> score{ new TextNode{mFonts, Fonts::EightBitArcade, std::to_string(mScore) , 64} };
 	mPlayerScore = score.get();
 	score->setColor(sf::Color(172, 50, 50));
@@ -239,11 +229,6 @@ void Arkanoid::setStatisticsText()
 	lives->setColor(sf::Color(172, 50, 50));
 	lives->setPosition(mWorldView.getSize().x / 2.0f, 54.0f);
 	mSceneLayers[Background]->attachChild(std::move(lives));
-
-	std::unique_ptr<TextNode> action{ new TextNode{mFonts, Fonts::EightBitArcade, "Space Bar" , 64} };
-	action->setColor(sf::Color(172, 50, 50));
-	action->setPosition(mWorldView.getSize().x - mWorldView.getSize().x / 5.0f, 54.0f);
-	mSceneLayers[Background]->attachChild(std::move(action));
 }
 
 void Arkanoid::generateStage(bool isRandom = false)

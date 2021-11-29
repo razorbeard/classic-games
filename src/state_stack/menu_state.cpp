@@ -1,4 +1,4 @@
-#include "menu_state.hpp"
+#include "state_stack/menu_state.hpp"
 #include "gui/animated_button.hpp"
 #include "audio/music_player.hpp"
 #include "utility.hpp"
@@ -22,10 +22,10 @@ MenuState::MenuState(StateStack& stack, Context context)
 	, mLargeRingBackground(context.textures->get(Textures::RingBackground))
 	, mSmallRingBackground(context.textures->get(Textures::RingBackground))
 	, mBackgroundSprite(context.textures->get(Textures::SelectText))
-	, mThreadAvailable(true)
-	, mStartTransition(false)
-	, mNextState(States::None)
 	, mGUIContainer()
+	, mNextState(States::None)
+	, mStartTransition(false)
+	, mThreadAvailable(true)
 {
 	sf::Vector2u windowSize{ context.window->getSize() };
 

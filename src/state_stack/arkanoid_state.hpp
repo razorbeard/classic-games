@@ -1,7 +1,7 @@
 #ifndef ARKANOID_STATE_HPP
 #define ARKANOID_STATE_HPP
 
-#include "state.hpp"
+#include "state_stack/state.hpp"
 #include "arkanoid/arkanoid.hpp"
 
 #include <SFML/System/Time.hpp>

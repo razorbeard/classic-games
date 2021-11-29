@@ -6,32 +6,29 @@
 
 #include <SFML/Graphics/RectangleShape.hpp>
 
-#include <iostream>
-
 namespace
 {
 	const std::vector<TetrominoData> Table = initializeTetrominoData();
-	//const int squareLength = Table[0].textureRect.width;
 }
 
 Tetris::Tetris(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds, MusicPlayer& music)
 	: mTarget(outputTarget)
 	, mSceneTexture()
 	, mWorldView(outputTarget.getDefaultView())
+	, mWorldBounds(0.0f, 0.0f, mWorldView.getSize().x, mWorldView.getSize().y)
 	, mTextures()
 	, mFonts(fonts)
 	, mSounds(sounds)
 	, mMusic(music)
-	, mWorldBounds(0.0f, 0.0f, mWorldView.getSize().x, mWorldView.getSize().y)
 	, mElapsedTime(sf::Time::Zero)
 	, mCurrentTetromino(nullptr)
-	, mHasLost(false)
 	, mScore(0)
 	, mLevel(0)
 	, mLinesCleared(0)
 	, mOffset(272, 24)
 	, mBagOffset(810, 108)
 	, mBoard(12, 18)
+	, mHasLost(false)
 {
 	mSceneTexture.create(mTarget.getSize().x, mTarget.getSize().y);
 	
@@ -233,8 +230,6 @@ void Tetris::moveCurrentPiece(Direction direction)
 	case Tetris::Direction::Down:
 		if (mBoard.doesPieceFit(*mCurrentTetromino, Tetromino::Rotation::None, 0, 1))
 			mCurrentTetromino->shift(0, +1);
-		break;
-	case Tetris::Direction::Up:
 		break;
 	default:
 		break;

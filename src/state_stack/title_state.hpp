@@ -1,7 +1,7 @@
 #ifndef TITLE_STATE_HPP
 #define TITLE_STATE_HPP
 
-#include "state.hpp"
+#include "state_stack/state.hpp"
 #include "graphics/animation.hpp"
 
 #include <SFML/System/Time.hpp>
@@ -23,17 +23,15 @@ public:
 
 private:
 	std::array<Animation, 6> mShinning;
-	SoundPlayer& mSounds;
-
+	sf::CircleShape mCircle;
 	sf::Sprite mTitle;
 	sf::Text mText;
-	sf::CircleShape mCircle;
+	SoundPlayer& mSounds;
 	sf::Time mMaxBlinkingTime;
-
-	bool mShowText;
-	bool mThreadAvailable;
 	sf::Time mTextEffectTime;
 	std::atomic_bool mStartTransition;
+	bool mShowText;
+	bool mThreadAvailable;
 };
 
 #endif // TITLE_STATE_HPP

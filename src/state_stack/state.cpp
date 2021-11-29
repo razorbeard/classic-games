@@ -1,5 +1,5 @@
-#include "state.hpp"
-#include "state_stack.hpp"
+#include "state_stack/state.hpp"
+#include "state_stack/state_stack.hpp"
 
 State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, Player& player, MusicPlayer& music, SoundPlayer& sounds)
 	: window(&window)

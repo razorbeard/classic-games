@@ -36,11 +36,11 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 private:
-	int mId;
+	std::unordered_map<int, sf::Sprite>* mSpriteContainer;
 	sf::Vector2i mCoordinates;
 	sf::Vector2i mOffset;
+	int mId;
 	std::pair<int, std::array<sf::Vector2i, 4>> mSquaresInfo;
-	std::unordered_map<int, sf::Sprite>* mSpriteContainer;
 };
 
 #endif // TETROMINO_HPP

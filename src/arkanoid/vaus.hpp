@@ -48,9 +48,9 @@ private:
 	sf::Time mFireCountdown;
 	Grid* mGrid;
 
+	bool mIsFiring;
 	bool mIsBallAttached;
 	bool mHasLaunchedBall;
-	bool mIsFiring;
 };
 
 #endif // VAUS_HPP

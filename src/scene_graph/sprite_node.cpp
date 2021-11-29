@@ -1,4 +1,4 @@
-#include "sprite_node.hpp"
+#include "scene_graph/sprite_node.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 

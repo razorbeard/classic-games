@@ -33,9 +33,9 @@ public:
 private:
 	std::vector<std::vector<Field>> mCells;
 	std::unordered_map<int, sf::Sprite>* mSpriteContainer;
+	sf::Vector2i mOffset;
 	int mWidth;
 	int mHeight;
-	sf::Vector2i mOffset;
 };
 
 #endif // BOARD_HPP

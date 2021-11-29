@@ -2,7 +2,6 @@
 #define BLOCK_HPP
 
 #include "entity.hpp"
-
 #include "commands/command.hpp"
 #include "resources/resource_identifiers.hpp"
 #include "graphics/animation.hpp"
@@ -48,16 +47,14 @@ private:
 
 private:
 	Color mColor;
+	Animation mSpriteAnimation;
+	Command mDropPowerUpCommand;
+	Grid* mGrid;
+	int mOldHitpoints;
 	bool mCanDropPowerUp;
 	bool mSpawnedPowerUp;
 	bool mShowShinning;
 	bool mRemovalFlag;
-	int mOldHitpoints;
-
-	Command mDropPowerUpCommand;
-	Grid* mGrid;
-
-	Animation mSpriteAnimation;
 };
 
 #endif // BLOCK_HPP

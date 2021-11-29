@@ -1,4 +1,4 @@
-#include "animated_button.hpp"
+#include "gui/animated_button.hpp"
 #include "utility.hpp"
 #include "data_tables.hpp"
 #include "audio/sound_player.hpp"
@@ -17,8 +17,8 @@ namespace GUI
 	// Build an animated sprite button with known data (only available in buttons.png)
 	AnimatedButton::AnimatedButton(Identifier id, State::Context context)
 		: Button(context)
-		, mIdentifier(id)
 		, mSprite(context.textures->get(Textures::Buttons), Table[id].textureRect)
+		, mIdentifier(id)
 	{
 		centerOrigin(mSprite);
 		changeTexture(Normal);

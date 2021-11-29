@@ -1,7 +1,7 @@
 #ifndef GAME_OVER_STATE_HPP
 #define GAME_OVER_STATE_HPP
 
-#include "state.hpp"
+#include "state_stack/state.hpp"
 
 #include <SFML/System/Time.hpp>
 #include <SFML/Graphics/Text.hpp>

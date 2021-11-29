@@ -1,6 +1,6 @@
-#include "power_up.hpp"
+#include "arkanoid/power_up.hpp"
 #include "data_tables.hpp"
-#include "block.hpp"
+#include "arkanoid/block.hpp"
 #include "commands/command_queue.hpp"
 #include "resources/resource_holder.hpp"
 
@@ -14,8 +14,8 @@ namespace
 PowerUp::PowerUp(Type type, const TextureHolder& textures, Grid* grid)
 	: Entity(1, grid)
 	, mType(type)
-	, mRemovalFlag(false)
 	, mSpriteAnimation(textures.get(Table[type].texture), Table[type].textureRect)
+	, mRemovalFlag(false)
 {
 	mSpriteAnimation.setFrameSize(Table[type].frameSize);
 	mSpriteAnimation.setNumFrames(Table[type].numFrames);

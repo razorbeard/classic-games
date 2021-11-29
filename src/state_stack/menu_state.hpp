@@ -1,7 +1,7 @@
 #ifndef MENU_STATE_HPP
 #define MENU_STATE_HPP
 
-#include "state.hpp"
+#include "state_stack/state.hpp"
 #include "gui/container.hpp"
 
 #include <SFML/System/Time.hpp>
@@ -21,17 +21,14 @@ public:
 
 private:
 	sf::CircleShape mCircle;
-
 	sf::Time mScaleEffectTime;
-	bool mThreadAvailable;
-	States::ID mNextState;
-	std::atomic_bool mStartTransition;
-
 	sf::Sprite mLargeRingBackground;
 	sf::Sprite mSmallRingBackground;
 	sf::Sprite mBackgroundSprite;
-
 	GUI::Container mGUIContainer;
+	States::ID mNextState;
+	std::atomic_bool mStartTransition;
+	bool mThreadAvailable;
 };
 
 #endif // MENU_STATE_HPP

@@ -1,7 +1,7 @@
 #ifndef BUTTON_HPP
 #define BUTTON_HPP
 
-#include "component.hpp"
+#include "gui/component.hpp"
 #include "resources/resource_identifiers.hpp"
 #include "state_stack/state.hpp"
 
@@ -53,13 +53,13 @@ namespace GUI
 		virtual void changeTexture(Type buttonType);
 
 	protected:
-		SoundPlayer& mSounds;
 		Callback mCallback;
-		bool mIsToggle;
-		sf::Text mText;
-		sf::Time mTimer;
 		Type mCurrentType;
+		sf::Time mTimer;
+		sf::Text mText;
+		SoundPlayer& mSounds;
 		bool mShowText;
+		bool mIsToggle;
 	};
 }
 

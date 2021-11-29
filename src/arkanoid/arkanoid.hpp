@@ -2,8 +2,8 @@
 #define ARKANOID_HPP
 
 #include "commands/command_queue.hpp"
-#include "block.hpp"
-#include "vaus.hpp"
+#include "arkanoid/block.hpp"
+#include "arkanoid/vaus.hpp"
 #include "scene_graph/grid.hpp"
 
 #include <SFML/Graphics/RenderTexture.hpp>

@@ -1,8 +1,7 @@
-#include "player.hpp"
-#include "command_queue.hpp"
+#include "commands/player.hpp"
+#include "commands/command_queue.hpp"
 #include "arkanoid/vaus.hpp"
 
-#include <map>
 #include <string>
 #include <algorithm>
 

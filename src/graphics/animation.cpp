@@ -1,4 +1,4 @@
-#include "animation.hpp"
+#include "graphics/animation.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
@@ -7,10 +7,10 @@ Animation::Animation()
 	, mFrameSize()
 	, mNumFrames(0)
 	, mCurrentFrame(0)
-	, mSpacing(0)
 	, mInitialTextRect()
 	, mDuration(sf::Time::Zero)
 	, mElapsedTime(sf::Time::Zero)
+	, mSpacing(0)
 	, mRepeat(false)
 {
 }
@@ -21,10 +21,10 @@ Animation::Animation(const sf::Texture& texture)
 	, mFrameSize()
 	, mNumFrames(0)
 	, mCurrentFrame(0)
-	, mSpacing(0)
 	, mInitialTextRect(mSprite.getTextureRect())
 	, mDuration(sf::Time::Zero)
 	, mElapsedTime(sf::Time::Zero)
+	, mSpacing(0)
 	, mRepeat(false)
 {
 }
@@ -35,10 +35,10 @@ Animation::Animation(const sf::Texture& texture, const sf::IntRect& rectangle)
 	, mFrameSize()
 	, mNumFrames(0)
 	, mCurrentFrame(0)
-	, mSpacing(0)
 	, mInitialTextRect(rectangle)
 	, mDuration(sf::Time::Zero)
 	, mElapsedTime(sf::Time::Zero)
+	, mSpacing(0)
 	, mRepeat(false)
 {
 	// Set the first frame to avoid drawing the whole texture at first render

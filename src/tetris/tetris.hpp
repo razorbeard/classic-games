@@ -73,9 +73,9 @@ private:
 	int mLinesCleared;
 	sf::Vector2i mOffset;
 	sf::Vector2i mBagOffset;
-	bool mHasLost;
 	Board mBoard;
 	CommandQueue mCommandQueue;
+	bool mHasLost;
 };
 
 #endif // TETRIS_HPP

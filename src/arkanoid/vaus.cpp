@@ -1,10 +1,10 @@
-#include "vaus.hpp"
+#include "arkanoid/vaus.hpp"
 #include "data_tables.hpp"
 #include "utility.hpp"
 #include "commands/command_queue.hpp"
 #include "scene_graph/sound_node.hpp"
 #include "scene_graph/grid.hpp"
-#include "projectile.hpp"
+#include "arkanoid/projectile.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
@@ -19,10 +19,10 @@ Vaus::Vaus(Mode mode, const TextureHolder& textures, Grid* grid)
 	, mSpriteAnimation(textures.get(Table[mode].texture), Table[mode].textureRect)
 	, mFireCommand()
 	, mFireCountdown(sf::Time::Zero)
+	, mGrid(grid)
 	, mIsFiring(false)
 	, mIsBallAttached(true)
 	, mHasLaunchedBall(false)
-	, mGrid(grid)
 {
 	mSpriteAnimation.setFrameSize(Table[mode].frameSize);
 	mSpriteAnimation.setNumFrames(Table[mode].numFrames);
