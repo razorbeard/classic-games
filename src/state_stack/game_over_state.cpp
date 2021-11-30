@@ -18,22 +18,20 @@ GameOverState::GameOverState(StateStack& stack, Context context)
 	sf::Vector2f const windowSize{ context.window->getSize() };
 
 	mGameOverText.setFont(font);
+	mMusic.stop();
 
 	if (mPlayer->getMissionStatus() == Player::MissionFailure)
 	{
-		mMusic.stop();
 		mGameOverText.setString("GAME OVER");
 		context.sounds->play(SoundEffect::GameOverJingle);
 	}
 	else if (mPlayer->getMissionStatus() == Player::MissionIntro)
 	{
-		mMusic.stop();
 		mGameOverText.setString("Ready ?");
 		context.sounds->play(SoundEffect::IntroJingle);
 	}
 	else
 	{
-		mMusic.stop();
 		mGameOverText.setString("Victory !");
 		context.sounds->play(SoundEffect::WinJingle);
 	}
@@ -68,14 +66,14 @@ bool GameOverState::update(sf::Time dt)
 	// Show state for 3 seconds
 	if (mElapsedTime > sf::seconds(3.0f))
 	{
-		// Intro finished : let the player play
+		// Intro finished: let the player play
 		if (mPlayer->getMissionStatus() == Player::MissionIntro)
 		{
 			requestStackPop();
 			mMusic.play(Music::ArkanoidTheme);
 		}
 
-		// Victory or defeat : go back to menu
+		// Victory or defeat: go back to menu
 		else
 		{
 			requestStateClear();

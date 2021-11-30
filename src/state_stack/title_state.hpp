@@ -10,7 +10,6 @@
 #include <SFML/Graphics/CircleShape.hpp>
 
 #include <array>
-#include <atomic>
 
 class TitleState : public State
 {
@@ -29,9 +28,9 @@ private:
 	SoundPlayer& mSounds;
 	sf::Time mMaxBlinkingTime;
 	sf::Time mTextEffectTime;
-	std::atomic_bool mStartTransition;
+	sf::Time mTransitionTime;
 	bool mShowText;
-	bool mThreadAvailable;
+	bool mHasPressedKey;
 };
 
 #endif // TITLE_STATE_HPP

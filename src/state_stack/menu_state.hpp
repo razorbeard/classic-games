@@ -8,8 +8,6 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 
-#include <atomic>
-
 class MenuState : public State
 {
 public:
@@ -22,13 +20,13 @@ public:
 private:
 	sf::CircleShape mCircle;
 	sf::Time mScaleEffectTime;
+	sf::Time mTransitionTime;
 	sf::Sprite mLargeRingBackground;
 	sf::Sprite mSmallRingBackground;
 	sf::Sprite mBackgroundSprite;
 	GUI::Container mGUIContainer;
 	States::ID mNextState;
-	std::atomic_bool mStartTransition;
-	bool mThreadAvailable;
+	bool mHasPressedKey;
 };
 
 #endif // MENU_STATE_HPP

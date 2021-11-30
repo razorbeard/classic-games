@@ -4,15 +4,6 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
-#include <thread>
-#include <chrono>
-
-namespace
-{
-	using namespace std::chrono_literals;
-	static std::thread* transitionTimer{ nullptr };
-}
-
 TitleState::TitleState(StateStack& stack, Context context)
 	: State(stack, context)
 	, mCircle(length(sf::Vector2f(context.window->getSize() / 2u)) + 15.0f, 16)
@@ -21,9 +12,9 @@ TitleState::TitleState(StateStack& stack, Context context)
 	, mSounds(*context.sounds)
 	, mMaxBlinkingTime(sf::seconds(0.5f))
 	, mTextEffectTime(sf::Time::Zero)
-	, mStartTransition(false)
+	, mTransitionTime(sf::Time::Zero)
 	, mShowText(true)
-	, mThreadAvailable(true)
+	, mHasPressedKey(false)
 {
 	// Convex hull of the window: we add an extra margin for the radius to avoid
 	// empty corners when rendering (we prefer a smaller number of segments)
@@ -81,6 +72,7 @@ void TitleState::draw()
 bool TitleState::update(sf::Time dt)
 {
 	mTextEffectTime += dt;
+	if (mHasPressedKey) mTransitionTime += dt;
 
 	// Induce blinking effect to the sf::Text object
 	if (mTextEffectTime >= mMaxBlinkingTime)
@@ -95,18 +87,13 @@ bool TitleState::update(sf::Time dt)
 		animation.update(dt);
 	}
 
-	// Switch to the next state when the other thread has finished to sleep
-	if (mStartTransition)
+	// Switch to the next state when the player has pressed any key
+	if (mTransitionTime >= sf::seconds(1.5f))
 	{
 		mCircle.setOutlineThickness(mCircle.getOutlineThickness() - 10.0f);
 
 		if (-mCircle.getOutlineThickness() >= mCircle.getRadius())
 		{
-			// Clean the memory before jumping to the next state
-			transitionTimer->join();
-			delete transitionTimer;
-			transitionTimer = nullptr;
-
 			requestStackPop();
 			requestStackPush(States::Menu);
 		}
@@ -117,24 +104,12 @@ bool TitleState::update(sf::Time dt)
 
 bool TitleState::handleEvent(const sf::Event& event)
 {
-	// If any key is pressed, launch a new thread to start a timer,
-	// then trigger the next screen with the main thread
-	if (event.type == sf::Event::KeyReleased && mThreadAvailable)
+	if (event.type == sf::Event::KeyReleased && !mHasPressedKey)
 	{
-		// Signal received => avoid the player launching multiple threads
-		mThreadAvailable = false;
+		mHasPressedKey = true;
 		mMaxBlinkingTime = sf::seconds(0.1f);
 
 		mSounds.play(SoundEffect::StartPressed);
-
-		// NB: when this thread goes out of scope, it will try to join
-		// with the main thread, causing the program to pause
-		// That's why it is defined in the namespace as a pointer
-		transitionTimer = new std::thread([&]()
-										  {
-											  std::this_thread::sleep_for(1.5s);
-											  mStartTransition = true;
-										  });
 	}
 
 	return true;

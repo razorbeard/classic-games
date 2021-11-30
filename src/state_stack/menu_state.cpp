@@ -6,26 +6,18 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include <cmath>
-#include <thread>
-#include <chrono>
-
-namespace
-{
-	using namespace std::chrono_literals;
-	static std::thread* transitionTimer{ nullptr };
-}
 
 MenuState::MenuState(StateStack& stack, Context context)
 	: State(stack, context)
 	, mCircle(length(sf::Vector2f(context.window->getSize() / 2u)) + 15.0f, 16)
 	, mScaleEffectTime(sf::Time::Zero)
+	, mTransitionTime(sf::Time::Zero)
 	, mLargeRingBackground(context.textures->get(Textures::RingBackground))
 	, mSmallRingBackground(context.textures->get(Textures::RingBackground))
 	, mBackgroundSprite(context.textures->get(Textures::SelectText))
 	, mGUIContainer()
-	, mNextState(States::None)
-	, mStartTransition(false)
-	, mThreadAvailable(true)
+	, mNextState(States::ID::None)
+	, mHasPressedKey(false)
 {
 	sf::Vector2u windowSize{ context.window->getSize() };
 
@@ -57,12 +49,7 @@ MenuState::MenuState(StateStack& stack, Context context)
 	arkanoidButton->setText("Arkanoid", 40, 3.0f);
 	arkanoidButton->setCallback([this]()
 								{
-									mThreadAvailable = false;
-									transitionTimer = new std::thread([&]()
-																	  {
-																		  std::this_thread::sleep_for(1.5s);
-																		  mStartTransition = true;
-																	  });
+									mHasPressedKey = true;
 									mNextState = States::ID::Arkanoid;
 								});
 
@@ -72,12 +59,7 @@ MenuState::MenuState(StateStack& stack, Context context)
 	tetrisButton->setText("Tetris", 40, 3.0f);
 	tetrisButton->setCallback([this]()
 								{
-									mThreadAvailable = false;
-									transitionTimer = new std::thread([&]()
-																	  {
-																		  std::this_thread::sleep_for(1.5s);
-																		  mStartTransition = true;
-																	  });
+									mHasPressedKey = true;
 									mNextState = States::ID::Tetris;
 								});
 
@@ -126,21 +108,18 @@ bool MenuState::update(sf::Time dt)
 	mSmallRingBackground.rotate(dt.asSeconds() * 25.0f);
 	mSmallRingBackground.setScale(smallPeriod, smallPeriod);
 
+	if (mHasPressedKey) mTransitionTime += dt;
+
 	// Update buttons effects
 	mGUIContainer.update(dt);
 
-	// Transition update : the circle disapear to show the scene
+	// Transition update: the circle disapear to show the scene
 	if (mCircle.getOutlineThickness() <= mCircle.getRadius())
 		mCircle.setOutlineThickness(mCircle.getOutlineThickness() + 10.0f);
 
-	// Launch the next state when an other thread has finished sleeping
-	if (mStartTransition)
+	// Launch the next state
+	if (mTransitionTime >= sf::seconds(1.5f))
 	{
-		// Clean the memory before jumping to the next state
-		transitionTimer->join();
-		delete transitionTimer;
-		transitionTimer = nullptr;
-
 		requestStackPop();
 		requestStackPush(mNextState);
 	}
@@ -152,7 +131,7 @@ bool MenuState::handleEvent(const sf::Event& event)
 {
 	// Wait for circle animation to fade before handling events
 	// If a key has been pressed, events are not handled anymore
-	if (mCircle.getOutlineThickness() >= 0 && mThreadAvailable)
+	if (mCircle.getOutlineThickness() >= 0 && !mHasPressedKey)
 		mGUIContainer.handleEvent(event);
 
 	return false;
