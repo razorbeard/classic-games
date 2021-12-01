@@ -5,14 +5,14 @@
 Classic Games is a compilation of retro-based games, developed in C++ with the SFML library.
 
 It is an open-source project I have started after reading the ["SFML Game Development" book](https://www.packtpub.com/product/sfml-game-development/9781849696845).\
-On top of the [source code](https://github.com/SFML/SFML-Game-Development-Book) accompanying the book, additional features will be added to fit my needs.
-
-**NOTE:** *The project is currently in an (very) early stage of development, so you may experience various bugs. I freshly dive into game development, 
-so my main goal for now is to experiment and learn different kind of implementations. It helps me understand their advantages and drawbacks.*
+On top of the [source code](https://github.com/SFML/SFML-Game-Development-Book) accompanying the book, additional features has been added to fit my needs.
 
 ## Download
 
 You can download the prebuilt binaries for Windows and Linux (x64) [here](https://github.com/razorbeard/classic-games/releases).
+
+**Note for Linux users** :
+Make sure you have installed SFML librairies, or else you will be not able to launch the executable.
 
 
 ## Building
