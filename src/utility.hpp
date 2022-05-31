@@ -2,6 +2,8 @@
 #define UTILITY_HPP
 
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <cmath>
 
 namespace sf
 {

@@ -17,6 +17,8 @@ Make sure you have installed SFML librairies, or else you will be not able to la
 
 ## Building
 
+This project uses Git LFS to store large files (musics, textures...). So before cloning this repository, install Git LFS to avoid any resources loading errors. 
+
 ### Windows (Visual Studio 2019)
 
 You need at least `Python 3.6` to install the prerequisites for this project. Also, make sure Python is added to your PATH environment variable.

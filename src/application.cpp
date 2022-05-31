@@ -23,7 +23,6 @@ Application::Application()
 	, mStatisticsNumFrames(0)
 {
 	mWindow.setKeyRepeatEnabled(false);
-	mWindow.setVerticalSyncEnabled(true);
 
 	mFonts.load(Fonts::EightBitArcade, "resources/fonts/8_bit_arcade_in.ttf");
 	mFonts.load(Fonts::Sansation, "resources/fonts/sansation.ttf");
