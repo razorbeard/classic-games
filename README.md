@@ -1,6 +1,13 @@
-![Logo](resources/textures/title_text.png)
+<p align="center">
+  <img src="resources/textures/title_text.png" width=90%>
+</p>
 
 ***
+
+<p align="center">
+  <img src="resources/textures/arkanoid_screenshot.png" width=49% height=49%>
+  <img src="resources/textures/tetris_screenshot.png" width=49% height=49%>
+</p>
 
 Classic Games is a compilation of retro-based games, developed in C++ with the SFML library.
 
